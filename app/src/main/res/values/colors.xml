@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="color_toolbar_bg">@android:color/holo_blue_light</color>
+    <color name="color_toolbar_state">@android:color/holo_blue_dark</color>
+
+    <color name="color_tab_one">@android:color/holo_blue_light</color>
+    <color name="color_tab_two">@android:color/holo_red_light</color>
+    <color name="color_tab_three">@android:color/holo_green_light</color>
+    <color name="color_tab_four">@android:color/holo_orange_light</color>
+
+    <color name="color_state_bar_one">@android:color/holo_blue_dark</color>
+    <color name="color_state_bar_two">@android:color/holo_red_dark</color>
+    <color name="color_state_bar_three">@android:color/holo_green_dark</color>
+    <color name="color_state_bar_four">@android:color/holo_orange_dark</color>
+
+    <color name="color_image_border">#ffffff</color>
+    <color name="color_nav_user_name">#ffffff</color>
+
+    <color name="color_white_max">#ffffff</color>
+</resources>

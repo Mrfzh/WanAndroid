@@ -1,0 +1,32 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- toolbar主题 -->
+    <style name="ToolbarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/color_toolbar_state</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="toolbarNavigationButtonStyle">@style/MyToolbarNavigationButtonStyle</item>
+    </style>
+
+    <!-- toolbar的title字体样式 -->
+    <style name="ToolbarTitle">
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <!-- 自定义toolbar的navigation样式，设置到toolbar主题的"toolbarNavigationButtonStyle"属性 -->
+    <!-- 如果图标过大，也可以将图标放到xxxhdpi中（分辨率越高，图片越小） -->
+    <style name="MyToolbarNavigationButtonStyle" parent="Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:padding">18dp</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+
+</resources>
