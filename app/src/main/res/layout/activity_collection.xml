@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.activity.CollectionActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <include
+        android:id="@+id/base_toolbar"
+        layout="@layout/base_toolbar" />
+
+    <TextView
+        android:id="@+id/tv_collection_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/base_toolbar" />
+
+    <ProgressBar
+        android:id="@+id/pb_collection"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminateTint="@color/color_tab_one"
+        android:visibility="gone" />
+
+</RelativeLayout>

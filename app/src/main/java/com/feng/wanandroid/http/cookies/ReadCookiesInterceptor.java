@@ -1,6 +1,8 @@
 package com.feng.wanandroid.http.cookies;
 
-import com.feng.wanandroid.base.MyApplication;
+import android.util.Log;
+
+import com.feng.wanandroid.app.MyApplication;
 import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.utils.Preferences;
 
@@ -19,6 +21,7 @@ public class ReadCookiesInterceptor implements Interceptor {
 
     @Override
     public Response intercept(Chain chain) throws IOException {
+        Log.d("fzh", "执行read 拦截器");
         Request.Builder builder = chain.request().newBuilder();
 //            HashSet<String> preferences = (HashSet) Preferences.getDefaultPreferences().getStringSet(Preferences.PREF_COOKIES, new HashSet<>());
 //        HashSet<String> preferences = cookies;
@@ -28,6 +31,7 @@ public class ReadCookiesInterceptor implements Interceptor {
 
         for (String cookie : preferences) {
             builder.addHeader("Cookie", cookie);
+            Log.d("fzh", "read :" + cookie);
         }
 
         return chain.proceed(builder.build());

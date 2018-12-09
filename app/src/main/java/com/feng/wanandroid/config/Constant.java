@@ -21,4 +21,6 @@ public class Constant {
 
     public static final String COOKIES_SHARE_PRE = "cookies_share_pre";
     public static final String COOKIES_TAG = "cookies_tag";
+
+    public static final String ERROR_MSG = "服务器不给力o(╥﹏╥)o";
 }

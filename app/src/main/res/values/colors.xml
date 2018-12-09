@@ -27,6 +27,12 @@
     <color name="color_login_text_bg_before_pressed">#00BFFF</color>
     <color name="color_login_text_bg_after_pressed">#1E90FF</color>
 
+    <color name="color_logout_title">#505050</color>
+    <color name="color_logout_content">#888888</color>
+    <color name="color_logout_choice">#222222</color>
+    <color name="color_logout_line">#cccccc</color>
+    <color name="color_logout_bg">#f1f1f1</color>
+
     <color name="color_white_max">#ffffff</color>
     <color name="color_blue">#1296db</color>
 </resources>

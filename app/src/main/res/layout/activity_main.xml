@@ -11,13 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/tb_main_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/color_toolbar_bg"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:elevation="4dp" />
+        <include layout="@layout/base_toolbar"
+            android:id="@+id/base_toolbar"/>
 
         <FrameLayout
             android:id="@+id/fv_main_container"
@@ -30,6 +25,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"/>
+
+        <ProgressBar
+            android:id="@+id/pb_main"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/color_tab_one"
+            android:visibility="gone"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

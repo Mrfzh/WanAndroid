@@ -10,10 +10,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
@@ -22,41 +22,25 @@ import com.feng.wanandroid.R;
 import com.feng.wanandroid.base.BaseActivity;
 import com.feng.wanandroid.base.BaseFragment;
 import com.feng.wanandroid.config.Constant;
-import com.feng.wanandroid.contract.ILoginContract;
-import com.feng.wanandroid.entity.CollectArticleBean;
-import com.feng.wanandroid.entity.LoginBean;
-import com.feng.wanandroid.http.api.AccountService;
-import com.feng.wanandroid.http.api.CollectionService;
-import com.feng.wanandroid.presenter.LoginPresenter;
+import com.feng.wanandroid.contract.IMainContract;
+import com.feng.wanandroid.presenter.MainPresenter;
+import com.feng.wanandroid.utils.Preferences;
 import com.feng.wanandroid.view.fragment.TestFragment;
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import com.feng.wanandroid.widget.LogoutDialog;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindColor;
 import butterknife.BindView;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity<MainPresenter> implements View.OnClickListener, IMainContract.View {
 
     private static final String TAG = "fzh";
     public static final String UPDATE_ACTION = "com.feng.main.update";
 
     @BindView(R.id.dv_main_draw_layout)
     DrawerLayout mMainDrawLayout;
-    @BindView(R.id.tb_main_toolbar)
+    @BindView(R.id.base_toolbar)
     Toolbar mMainToolbar;
     @BindView(R.id.nb_main_bottom_navigation_bar)
     BottomNavigationBar mMainBottomNavigationBar;
@@ -74,6 +58,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     int mTabThreeColor;
     @BindColor(R.color.color_tab_four)
     int mTabFourColor;
+    @BindView(R.id.pb_main)
+    ProgressBar mProgressBar;
 
     private boolean mIsLogin = false;
     private ArrayList<BaseFragment> mFragments;     //fragment集合
@@ -81,16 +67,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private UpdateReceiver mUpdateReceiver;
     private LocalBroadcastManager mLocalBroadcastManager;
 
-    HashSet<String> cookies;
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
     }
 
     @Override
-    protected LoginPresenter getPresenter() {
-        return new LoginPresenter();
+    protected MainPresenter getPresenter() {
+        return new MainPresenter();
     }
 
     @Override
@@ -120,6 +104,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         mLocalBroadcastManager.unregisterReceiver(mUpdateReceiver);
+        Preferences.clearSharedPreferences(this, Constant.COOKIES_SHARE_PRE);   //退出清除cookies
     }
 
     /**
@@ -164,16 +149,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mMainNavigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.menu_main_navigation_collection:
-                    showShortToast("点击了我的收藏");
+                    if (mIsLogin)
+                        jumpToNewActivity(CollectionActivity.class);
+                    else
+                        showShortToast("请先登录");
                     break;
                 case R.id.menu_main_navigation_logout:
-                    showShortToast("点击了退出登录");
+                    LogoutDialog logoutDialog = new LogoutDialog(this);
+                    logoutDialog.show();
+//                    mMainDrawLayout.closeDrawers();
+//                    mPresenter.logout();
+//                    mProgressBar.setVisibility(View.VISIBLE);
                     break;
                 default:
                     break;
             }
-            mMainDrawLayout.closeDrawers();     //关闭侧边菜单
-
             return true;
         });
 
@@ -244,6 +234,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void logoutSuccess() {
+        mProgressBar.setVisibility(View.GONE);
+        showShortToast("已退出登录");
+        mIsLogin = false;
+        Preferences.clearSharedPreferences(this, Constant.COOKIES_SHARE_PRE);   //清除cookies
+        mHeadImage.setImageResource(R.drawable.head_image_unlogin);
+        mUserName.setText("登录");
+    }
+
+    @Override
+    public void logoutError(String errorMsg) {
+        mProgressBar.setVisibility(View.GONE);
+        showShortToast(errorMsg);
+    }
+
     class UpdateReceiver extends BroadcastReceiver {
 
         @Override
@@ -252,126 +258,5 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             mUserName.setText(intent.getStringExtra(LoginActivity.UPDATE_TAG));
             mIsLogin = true;
         }
-    }
-
-    class SaveCookiesInterceptor implements Interceptor {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Response originalResponse = chain.proceed(chain.request());
-            if (!originalResponse.headers("Set-Cookie").isEmpty()) {
-                cookies = new HashSet<>();
-
-                for (String header : originalResponse.headers("Set-Cookie")) {
-                    cookies.add(header);
-                    Log.d(TAG, "intercept: " + header);
-                }
-            }
-            return originalResponse;
-        }
-    }
-
-    class ReadCookiesInterceptor implements Interceptor {
-
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Request.Builder builder = chain.request().newBuilder();
-//            HashSet<String> preferences = (HashSet) Preferences.getDefaultPreferences().getStringSet(Preferences.PREF_COOKIES, new HashSet<>());
-            HashSet<String> preferences = cookies;
-            for (String cookie : preferences) {
-                builder.addHeader("Cookie", cookie);
-            }
-
-            return chain.proceed(builder.build());
-        }
-    }
-
-    private void loginTest() {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.connectTimeout(10, TimeUnit.SECONDS);   //连接超时时间（10秒）
-        builder.writeTimeout(10, TimeUnit.SECONDS);     //写操作超时时间
-        builder.readTimeout(10, TimeUnit.SECONDS);      //读操作超时时间
-        builder.addInterceptor(new SaveCookiesInterceptor());
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .client(builder.build())    //加入okhttp配置
-                .addConverterFactory(GsonConverterFactory.create())     //Gson解析
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())  //配合RxJava2
-                .baseUrl(Constant.BASE_URL)	//基本路径
-                .build();
-
-        AccountService accountService = retrofit.create(AccountService.class);
-
-        accountService.login("feng1216", "ktpr8621030")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<LoginBean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(LoginBean loginBean) {
-                        showShortToast("登录成功");
-                        Log.d(TAG, "user: " + loginBean.getData().getUsername()
-                            + ", password: " + loginBean.getData().getPassword());
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        showShortToast("登录失败");
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
-    private void getCl() {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.connectTimeout(10, TimeUnit.SECONDS);   //连接超时时间（10秒）
-        builder.writeTimeout(10, TimeUnit.SECONDS);     //写操作超时时间
-        builder.readTimeout(10, TimeUnit.SECONDS);      //读操作超时时间
-        builder.addInterceptor(new ReadCookiesInterceptor());
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .client(builder.build())    //加入okhttp配置
-                .addConverterFactory(GsonConverterFactory.create())     //Gson解析
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())  //配合RxJava2
-                .baseUrl(Constant.BASE_URL)	//基本路径
-                .build();
-
-        CollectionService collectionService = retrofit.create(CollectionService.class);
-
-        collectionService.getCollectArticleList(0)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<CollectArticleBean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(CollectArticleBean collectArticleBean) {
-                        if (!collectArticleBean.getErrorMsg().equals("")) {
-                            showShortToast(collectArticleBean.getErrorMsg());
-                        } else {
-                            showShortToast("获取收藏列表成功");
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        showShortToast("获取收藏列表失败");
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
     }
 }

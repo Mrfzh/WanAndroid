@@ -1,4 +1,4 @@
-package com.feng.wanandroid.base;
+package com.feng.wanandroid.app;
 
 import android.app.Application;
 import android.content.Context;

@@ -3,7 +3,7 @@ package com.feng.wanandroid.http.cookies;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.feng.wanandroid.base.MyApplication;
+import com.feng.wanandroid.app.MyApplication;
 import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.utils.Preferences;
 
@@ -27,6 +27,7 @@ public class SaveCookiesInterceptor implements Interceptor {
 
             for (String header : originalResponse.headers("Set-Cookie")) {
                 cookies.add(header);
+                Log.d("fzh", "save :" + header);
             }
 
             Preferences.getSharedPreferencesEditor(MyApplication.getContext(), Constant.COOKIES_SHARE_PRE)

@@ -17,4 +17,8 @@ public class Preferences {
         return context.getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
+    public static boolean clearSharedPreferences(Context context, String name) {
+        return context.getSharedPreferences(name, Context.MODE_PRIVATE).edit().clear().commit();
+    }
+
 }

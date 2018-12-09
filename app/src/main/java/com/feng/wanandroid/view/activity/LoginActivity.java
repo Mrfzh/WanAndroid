@@ -1,16 +1,20 @@
 package com.feng.wanandroid.view.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.feng.wanandroid.R;
 import com.feng.wanandroid.base.BaseActivity;
-import com.feng.wanandroid.base.MyApplication;
 import com.feng.wanandroid.contract.ILoginContract;
 import com.feng.wanandroid.presenter.LoginPresenter;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -19,12 +23,14 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements ILogi
 
     public static final String UPDATE_TAG = "username";
 
-    @BindView(R.id.tb_login_toolbar)
+    @BindView(R.id.base_toolbar)
     Toolbar mLoginToolbar;
     @BindView(R.id.et_login_user)
     EditText mUserEt;
     @BindView(R.id.et_login_password)
     EditText mPasswordEt;
+    @BindView(R.id.pb_login)
+    ProgressBar mProgressBar;
 
     @Override
     protected int getLayoutId() {
@@ -38,6 +44,12 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements ILogi
 
     @Override
     protected void initView() {
+
+    }
+
+    @Override
+    protected void initToolbar() {
+        super.initToolbar();
         setToolbarTitle("登录");
         mLoginToolbar.setNavigationIcon(R.mipmap.back);
         mLoginToolbar.setNavigationOnClickListener(v -> finish());
@@ -55,6 +67,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements ILogi
 
     @Override
     public void loginSuccess(String userName) {
+        mProgressBar.setVisibility(View.GONE);
         showShortToast("登录成功");
         Intent intent = new Intent(MainActivity.UPDATE_ACTION);
         intent.putExtra(UPDATE_TAG, userName);
@@ -64,6 +77,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements ILogi
 
     @Override
     public void loginError(String errorMsg) {
+        mProgressBar.setVisibility(View.GONE);
         showShortToast(errorMsg);
     }
 
@@ -84,14 +98,19 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements ILogi
      * 登录操作
      */
     private void login() {
-        checkContent();
-        mPresenter.login(mUserEt.getText().toString(), mPasswordEt.getText().toString());
-    }
-
-    private void checkContent() {
-        if (mUserEt.getText().toString().equals(""))
+        if (mUserEt.getText().toString().equals("")) {
             showShortToast("请输入用户名");
-        if (mPasswordEt.getText().toString().equals(""))
+            return;
+        }
+        if (mPasswordEt.getText().toString().equals("")) {
             showShortToast("请输入密码");
+            return;
+        }
+        //先隐藏软键盘
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        Objects.requireNonNull(imm).toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+
+        mProgressBar.setVisibility(View.VISIBLE);
+        mPresenter.login(mUserEt.getText().toString(), mPasswordEt.getText().toString());
     }
 }
