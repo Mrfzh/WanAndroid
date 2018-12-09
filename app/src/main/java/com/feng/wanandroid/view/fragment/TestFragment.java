@@ -6,7 +6,6 @@ import android.widget.TextView;
 import com.feng.wanandroid.R;
 import com.feng.wanandroid.base.BaseFragment;
 import com.feng.wanandroid.base.BasePresenter;
-import com.feng.wanandroid.contract.IMainContract;
 
 import java.util.Objects;
 

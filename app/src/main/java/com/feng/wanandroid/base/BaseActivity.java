@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
+import com.feng.wanandroid.R;
+import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.utils.BaseUtils;
 
 import java.util.Objects;
@@ -22,7 +24,7 @@ import butterknife.Unbinder;
 public abstract class BaseActivity<T extends BasePresenter> extends AppCompatActivity {
 
     private Unbinder unBinder;
-    private T mPresenter;
+    protected T mPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
             mPresenter.attachView(this);
         }
 
+        initToolbar();
         initView();
         initData();
     }
@@ -69,6 +72,16 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
      * 初始化视图
      */
     protected abstract void initView();
+
+    protected abstract Toolbar getToolbar();
+
+    protected void initToolbar() {
+        Toolbar toolbar = getToolbar();
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            toolbar.setTitleTextAppearance(this, R.style.ToolbarTitle);    //设置标题字体样式
+        }
+    }
 
     /**
      * 初始化数据

@@ -1,8 +1,13 @@
 package com.feng.wanandroid.view.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,14 +21,13 @@ import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.feng.wanandroid.R;
 import com.feng.wanandroid.base.BaseActivity;
 import com.feng.wanandroid.base.BaseFragment;
-import com.feng.wanandroid.base.BasePresenter;
 import com.feng.wanandroid.config.Constant;
-import com.feng.wanandroid.contract.IMainContract;
+import com.feng.wanandroid.contract.ILoginContract;
 import com.feng.wanandroid.entity.CollectArticleBean;
 import com.feng.wanandroid.entity.LoginBean;
 import com.feng.wanandroid.http.api.AccountService;
 import com.feng.wanandroid.http.api.CollectionService;
-import com.feng.wanandroid.presenter.MainPresenter;
+import com.feng.wanandroid.presenter.LoginPresenter;
 import com.feng.wanandroid.view.fragment.TestFragment;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
@@ -45,9 +49,10 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends BaseActivity<MainPresenter> implements IMainContract.View, View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "fzh";
+    public static final String UPDATE_ACTION = "com.feng.main.update";
 
     @BindView(R.id.dv_main_draw_layout)
     DrawerLayout mMainDrawLayout;
@@ -57,6 +62,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements IMainCo
     BottomNavigationBar mMainBottomNavigationBar;
     @BindView(R.id.nv_main_navigation_view)
     NavigationView mMainNavigationView;
+
+    ImageView mHeadImage;
+    TextView mUserName;
 
     @BindColor(R.color.color_tab_one)
     int mTabOneColor;
@@ -70,6 +78,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements IMainCo
     private boolean mIsLogin = false;
     private ArrayList<BaseFragment> mFragments;     //fragment集合
     private int mLastFgIndex;                       //记录上一个Fragment的索引
+    private UpdateReceiver mUpdateReceiver;
+    private LocalBroadcastManager mLocalBroadcastManager;
 
     HashSet<String> cookies;
 
@@ -79,29 +89,37 @@ public class MainActivity extends BaseActivity<MainPresenter> implements IMainCo
     }
 
     @Override
-    protected MainPresenter getPresenter() {
-        return new MainPresenter();
+    protected LoginPresenter getPresenter() {
+        return new LoginPresenter();
     }
 
     @Override
     protected void initView() {
-        initToolbar();
         initBottomBar();
         initNavigationView();
     }
 
-    /**
-     * 初始化Toolbar
-     */
-    private void initToolbar() {
-        setSupportActionBar(mMainToolbar);
+
+    @Override
+    protected Toolbar getToolbar() {
+        return mMainToolbar;
+    }
+
+    @Override
+    protected void initToolbar() {
+        super.initToolbar();
         setToolbarTitle(Constant.TAB_TEXT[0]);   //设置标题
-        mMainToolbar.setTitleTextAppearance(this, R.style.ToolbarTitle);    //设置标题字体样式
         mMainToolbar.setNavigationIcon(R.mipmap.main_menu);    //设置左上角图标
         //设置NavigationIcon的点击事件（注意：需在setSupportActionBar()后面）
         mMainToolbar.setNavigationOnClickListener(v -> {
             mMainDrawLayout.openDrawer(Gravity.START);  //打开侧滑菜单
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mLocalBroadcastManager.unregisterReceiver(mUpdateReceiver);
     }
 
     /**
@@ -160,20 +178,34 @@ public class MainActivity extends BaseActivity<MainPresenter> implements IMainCo
         });
 
         View headerView = mMainNavigationView.getHeaderView(0); //获取header布局
-        ImageView headImage = headerView.findViewById(R.id.iv_nav_main_header_head_image);
-        TextView userName = headerView.findViewById(R.id.tv_nav_main_header_user_name);
+        mHeadImage = headerView.findViewById(R.id.iv_nav_main_header_head_image);
+        mHeadImage.setOnClickListener(this);
+        mUserName = headerView.findViewById(R.id.tv_nav_main_header_user_name);
+        mUserName.setOnClickListener(this);
         if (mIsLogin) {
-            headImage.setImageResource(R.drawable.head_image);
+            mHeadImage.setImageResource(R.drawable.head_image);
         } else {
-            headImage.setImageResource(R.drawable.head_image_unlogin);
-            userName.setText("登录");
+            mHeadImage.setImageResource(R.drawable.head_image_unlogin);
+            mUserName.setText("登录");
         }
     }
 
     @Override
     protected void initData() {
+        initReceiver();
         initFragment();
         switchFragment(0);
+    }
+
+    /**
+     * 初始化广播
+     */
+    private void initReceiver() {
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
+        mUpdateReceiver = new UpdateReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UPDATE_ACTION);
+        mLocalBroadcastManager.registerReceiver(mUpdateReceiver, intentFilter);
     }
 
     private void initFragment() {
@@ -198,23 +230,13 @@ public class MainActivity extends BaseActivity<MainPresenter> implements IMainCo
     }
 
     @Override
-    public void loginSuccess() {
-
-    }
-
-    @Override
-    public void loginError() {
-
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_nav_main_header_head_image:
             case R.id.tv_nav_main_header_user_name:
                 if (!mIsLogin) {
                     //如果没有登录，就跳转到登录活动
-
+                    jumpToNewActivity(LoginActivity.class);
                 }
                 break;
             default:
@@ -222,11 +244,20 @@ public class MainActivity extends BaseActivity<MainPresenter> implements IMainCo
         }
     }
 
+    class UpdateReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mHeadImage.setImageResource(R.drawable.head_image);
+            mUserName.setText(intent.getStringExtra(LoginActivity.UPDATE_TAG));
+            mIsLogin = true;
+        }
+    }
+
     class SaveCookiesInterceptor implements Interceptor {
         @Override
         public Response intercept(Chain chain) throws IOException {
             Response originalResponse = chain.proceed(chain.request());
-
             if (!originalResponse.headers("Set-Cookie").isEmpty()) {
                 cookies = new HashSet<>();
 
@@ -234,10 +265,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements IMainCo
                     cookies.add(header);
                     Log.d(TAG, "intercept: " + header);
                 }
-
-//                Preferences.getDefaultPreferences().edit()
-//                        .putStringSet(Preferences.PREF_COOKIES, cookies)
-//                        .apply();
             }
             return originalResponse;
         }

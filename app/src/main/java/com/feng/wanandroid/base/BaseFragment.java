@@ -18,7 +18,7 @@ import butterknife.Unbinder;
 public abstract class BaseFragment<V extends BasePresenter> extends Fragment {
 
     private Unbinder unBinder;
-    private V mPresenter;   //该Fragment对应的Presenter
+    protected V mPresenter;   //该Fragment对应的Presenter
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
