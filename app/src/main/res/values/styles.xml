@@ -20,12 +20,18 @@
     <style name="ToolbarTitle">
         <item name="android:textSize">22sp</item>
     </style>
+    <style name="ArticleToolbarTitle">
+        <item name="android:textSize">20sp</item>
+    </style>
 
     <!-- 自定义toolbar的navigation样式，设置到toolbar主题的"toolbarNavigationButtonStyle"属性 -->
     <!-- 如果图标过大，也可以将图标放到xxxhdpi中（分辨率越高，图片越小） -->
     <style name="MyToolbarNavigationButtonStyle" parent="Widget.AppCompat.Toolbar.Button.Navigation">
         <item name="android:minWidth">0dp</item>
-        <item name="android:padding">18dp</item>
+        <item name="android:paddingTop">18dp</item>
+        <item name="android:paddingBottom">18dp</item>
+        <item name="android:paddingLeft">9dp</item>
+        <item name="android:paddingRight">9dp</item>
         <item name="android:scaleType">centerInside</item>
     </style>
 

@@ -25,8 +25,9 @@ import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.contract.IMainContract;
 import com.feng.wanandroid.presenter.MainPresenter;
 import com.feng.wanandroid.utils.Preferences;
+import com.feng.wanandroid.view.fragment.HomeFragment;
 import com.feng.wanandroid.view.fragment.TestFragment;
-import com.feng.wanandroid.widget.LogoutDialog;
+import com.feng.wanandroid.widget.dialog.LogoutDialog;
 
 import java.util.ArrayList;
 
@@ -46,6 +47,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
     BottomNavigationBar mMainBottomNavigationBar;
     @BindView(R.id.nv_main_navigation_view)
     NavigationView mMainNavigationView;
+    @BindView(R.id.pb_main)
+    ProgressBar mProgressBar;
 
     ImageView mHeadImage;
     TextView mUserName;
@@ -58,8 +61,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
     int mTabThreeColor;
     @BindColor(R.color.color_tab_four)
     int mTabFourColor;
-    @BindView(R.id.pb_main)
-    ProgressBar mProgressBar;
 
     private boolean mIsLogin = false;
     private ArrayList<BaseFragment> mFragments;     //fragment集合
@@ -82,7 +83,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
         initBottomBar();
         initNavigationView();
     }
-
 
     @Override
     protected Toolbar getToolbar() {
@@ -113,9 +113,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
     private void initBottomBar() {
         //初始化底部导航栏
         mMainBottomNavigationBar.addItem(new BottomNavigationItem(R.drawable.tab_one_icon, Constant.TAB_TEXT[0]).setActiveColor(mTabOneColor))
-                .addItem(new BottomNavigationItem(R.drawable.tab_two_icon, Constant.TAB_TEXT[1]).setActiveColor(mTabTwoColor))
-                .addItem(new BottomNavigationItem(R.drawable.tab_three_icon, Constant.TAB_TEXT[2]).setActiveColor(mTabThreeColor))
-                .addItem(new BottomNavigationItem(R.drawable.tab_four_icon, Constant.TAB_TEXT[3]).setActiveColor(mTabFourColor))
+                .addItem(new BottomNavigationItem(R.drawable.tab_two_icon, Constant.TAB_TEXT[1]).setActiveColor(mTabOneColor))
+                .addItem(new BottomNavigationItem(R.drawable.tab_three_icon, Constant.TAB_TEXT[2]).setActiveColor(mTabOneColor))
+                .addItem(new BottomNavigationItem(R.drawable.tab_four_icon, Constant.TAB_TEXT[3]).setActiveColor(mTabOneColor))
                 .setFirstSelectedPosition(0)
                 .setMode(BottomNavigationBar.MODE_FIXED)    //显示文字
                 .setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_RIPPLE)    //设置背景
@@ -146,6 +146,10 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
      * 初始化侧边菜单栏
      */
     private void initNavigationView() {
+        if (!mIsLogin) {
+            //未登录时隐藏退出登录菜单项
+            setLogoutItemVisible(false);
+        }
         mMainNavigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.menu_main_navigation_collection:
@@ -156,10 +160,21 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
                     break;
                 case R.id.menu_main_navigation_logout:
                     LogoutDialog logoutDialog = new LogoutDialog(this);
+                    logoutDialog.setOnClickListener(new LogoutDialog.OnClickListener() {
+                        @Override
+                        public void clickEnsure() {
+                            logoutDialog.dismiss();
+                            mMainDrawLayout.closeDrawers();
+                            mPresenter.logout();
+                            mProgressBar.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void clickCancel() {
+                            logoutDialog.dismiss();
+                        }
+                    });
                     logoutDialog.show();
-//                    mMainDrawLayout.closeDrawers();
-//                    mPresenter.logout();
-//                    mProgressBar.setVisibility(View.VISIBLE);
                     break;
                 default:
                     break;
@@ -200,7 +215,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
 
     private void initFragment() {
         mFragments = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
+        mFragments.add(new HomeFragment());
+        for (int i = 0; i < 3; i++) {
             mFragments.add(TestFragment.newInstance("Fragment " + i));
         }
     }
@@ -240,6 +256,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
         showShortToast("已退出登录");
         mIsLogin = false;
         Preferences.clearSharedPreferences(this, Constant.COOKIES_SHARE_PRE);   //清除cookies
+        setLogoutItemVisible(false);    //隐藏退出登录菜单项
         mHeadImage.setImageResource(R.drawable.head_image_unlogin);
         mUserName.setText("登录");
     }
@@ -257,6 +274,16 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
             mHeadImage.setImageResource(R.drawable.head_image);
             mUserName.setText(intent.getStringExtra(LoginActivity.UPDATE_TAG));
             mIsLogin = true;
+            setLogoutItemVisible(true);     //显示退出登录菜单项
         }
+    }
+
+    /**
+     * 设置退出登录菜单项是否可见（未登录时不可见）
+     *
+     * @param visible
+     */
+    private void setLogoutItemVisible(boolean visible) {
+        mMainNavigationView.getMenu().getItem(1).setVisible(visible);
     }
 }

@@ -33,6 +33,16 @@
     <color name="color_logout_line">#cccccc</color>
     <color name="color_logout_bg">#f1f1f1</color>
 
+    <color name="color_item_bottom_text">#555555</color>
+    <color name="color_item_bottom_bg">#cccccc</color>
+
+    <color name="color_item_home_article_author_name">#777777</color>
+    <color name="color_item_home_article_date">#777777</color>
+    <color name="color_item_home_article_title">#333333</color>
+    <color name="color_item_home_article_chapter_name">#1296db</color>
+
+    <color name="color_hor_progress_bar">#000080</color>
+
     <color name="color_white_max">#ffffff</color>
     <color name="color_blue">#1296db</color>
 </resources>

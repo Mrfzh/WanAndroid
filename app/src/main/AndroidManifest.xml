@@ -14,8 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/ToolbarTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity
-            android:name=".view.activity.MainActivity">
+        <activity android:name=".view.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,7 +22,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.activity.LoginActivity" />
-        <activity android:name=".view.activity.CollectionActivity"/>
+        <activity android:name=".view.activity.CollectionActivity" />
+        <activity android:name=".view.activity.ShowArticleActivity"></activity>
     </application>
 
 </manifest>

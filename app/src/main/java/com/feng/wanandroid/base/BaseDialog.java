@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -21,11 +22,11 @@ public abstract class BaseDialog extends Dialog {
     }
 
     /**
-     * 获取当前布局
+     * 获取当前布局视图
      *
-     * @return 布局id
+     * @return 布局视图
      */
-    protected abstract int getCustomView();
+    protected abstract View getCustomView();
 
     /**
      * 获取相对于屏幕宽度的宽度比例

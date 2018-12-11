@@ -35,9 +35,9 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
             mPresenter.attachView(this);
         }
 
+        initData();
         initToolbar();
         initView();
-        initData();
     }
 
     @Override
