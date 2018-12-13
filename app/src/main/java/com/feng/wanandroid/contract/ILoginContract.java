@@ -6,11 +6,11 @@ package com.feng.wanandroid.contract;
  */
 public interface ILoginContract {
     interface View {
-        void loginSuccess(String userName);
+        void loginSuccess(String userName, String password);
         void loginError(String errorMsg);
     }
     interface Presenter {
-        void loginSuccess(String userName);
+        void loginSuccess(String userName, String password);
         void loginError(String errorMsg);
         void login(String user, String password);
     }

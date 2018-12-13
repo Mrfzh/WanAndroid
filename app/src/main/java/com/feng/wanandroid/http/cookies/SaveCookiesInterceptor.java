@@ -31,7 +31,7 @@ public class SaveCookiesInterceptor implements Interceptor {
             }
 
             Preferences.getSharedPreferencesEditor(MyApplication.getContext(), Constant.COOKIES_SHARE_PRE)
-                    .putStringSet(Constant.COOKIES_TAG, cookies)
+                    .putStringSet(Constant.COOKIES_KEY, cookies)
                     .apply();
         }
         return originalResponse;

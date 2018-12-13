@@ -1,9 +1,13 @@
 package com.feng.wanandroid.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+
+import java.util.Objects;
 
 /**
  * @author Feng Zhaohao
@@ -27,5 +31,15 @@ public class BaseUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 隐藏软键盘
+     *
+     * @param context
+     */
+    public static void hideSoftKeyboard(Context context) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        Objects.requireNonNull(imm).toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

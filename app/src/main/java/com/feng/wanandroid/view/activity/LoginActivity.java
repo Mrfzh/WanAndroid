@@ -1,11 +1,9 @@
 package com.feng.wanandroid.view.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
@@ -13,15 +11,12 @@ import com.feng.wanandroid.R;
 import com.feng.wanandroid.base.BaseActivity;
 import com.feng.wanandroid.contract.ILoginContract;
 import com.feng.wanandroid.presenter.LoginPresenter;
-
-import java.util.Objects;
+import com.feng.wanandroid.utils.BaseUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity<LoginPresenter> implements ILoginContract.View {
-
-    public static final String UPDATE_TAG = "username";
 
     @BindView(R.id.base_toolbar)
     Toolbar mLoginToolbar;
@@ -48,11 +43,14 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements ILogi
     }
 
     @Override
+    protected void doInOnCreate() {
+
+    }
+
+    @Override
     protected void initToolbar() {
         super.initToolbar();
         setToolbarTitle("登录");
-        mLoginToolbar.setNavigationIcon(R.mipmap.back);
-        mLoginToolbar.setNavigationOnClickListener(v -> finish());
     }
 
     @Override
@@ -61,16 +59,23 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements ILogi
     }
 
     @Override
+    protected boolean setToolbarBackIcon() {
+        return true;
+    }
+
+    @Override
     protected void initData() {
 
     }
 
     @Override
-    public void loginSuccess(String userName) {
+    public void loginSuccess(String userName, String password) {
         mProgressBar.setVisibility(View.GONE);
         showShortToast("登录成功");
+        updateUserInfo(userName, password);     //更新存储在本地的用户信息
+        setIsLogin(true);
         Intent intent = new Intent(MainActivity.UPDATE_ACTION);
-        intent.putExtra(UPDATE_TAG, userName);
+        intent.putExtra(MainActivity.UPDATE_TAG, userName);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         finish();
     }
@@ -88,6 +93,8 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements ILogi
                 login();
                 break;
             case R.id.tv_login_register:
+                jumpToNewActivity(RegisterActivity.class);
+                finish();
                 break;
             default:
                 break;
@@ -107,8 +114,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements ILogi
             return;
         }
         //先隐藏软键盘
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        Objects.requireNonNull(imm).toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        BaseUtils.hideSoftKeyboard(this);
 
         mProgressBar.setVisibility(View.VISIBLE);
         mPresenter.login(mUserEt.getText().toString(), mPasswordEt.getText().toString());

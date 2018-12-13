@@ -8,7 +8,9 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.feng.wanandroid.R;
+import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.utils.BaseUtils;
+import com.feng.wanandroid.utils.Preferences;
 
 import java.util.Objects;
 
@@ -27,6 +29,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        doBeforeSetContentView();
         setContentView(getLayoutId());
         unBinder = ButterKnife.bind(this);  //绑定ButterKnife
 
@@ -38,6 +41,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         initData();
         initToolbar();
         initView();
+        doInOnCreate();
     }
 
     @Override
@@ -50,6 +54,13 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         if (mPresenter != null) {
             mPresenter.detachView();
         }
+    }
+
+    /**
+     * 在setContentView方法前的操作
+     */
+    protected void doBeforeSetContentView() {
+
     }
 
     /**
@@ -66,25 +77,47 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
      */
     protected abstract T getPresenter();
 
-    /**
-     * 初始化视图
-     */
-    protected abstract void initView();
 
+    /**
+     * 初始化数据
+     */
+    protected abstract void initData();
+
+    /**
+     * 获取toolbar实例
+     *
+     * @return toolbar实例
+     */
     protected abstract Toolbar getToolbar();
+
+    /**
+     * 是否设置toolbar左上角含返回按钮，没有toolbar请返回false
+     *
+     * @return
+     */
+    protected abstract boolean setToolbarBackIcon();
 
     protected void initToolbar() {
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             toolbar.setTitleTextAppearance(this, R.style.ToolbarTitle);    //设置标题字体样式
+            if (setToolbarBackIcon()) {
+                toolbar.setNavigationIcon(R.mipmap.back);
+                toolbar.setNavigationOnClickListener(v -> finish());
+            }
         }
     }
 
     /**
-     * 初始化数据
+     * 初始化视图
      */
-    protected abstract void initData();
+    protected abstract void initView();
+
+    /**
+     * 初始化数据和视图后再OnCreate方法中的操作
+     */
+    protected abstract void doInOnCreate();
 
     /**
      * 弹出Toast
@@ -131,5 +164,39 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     protected void jumpToNewActivity(Class activity) {
         Intent intent = new Intent(this, activity);
         startActivity(intent);
+    }
+
+    /**
+     * 设置登录状态
+     *
+     * @param isLogin
+     */
+    protected void setIsLogin(boolean isLogin) {
+        Preferences.getSharedPreferencesEditor(this, Constant.LOGIN_STATE_SHARE_PRE)
+                .putBoolean(Constant.IS_LOGIN_KEY, isLogin)
+                .apply();
+    }
+
+    /**
+     * 获取登录状态
+     *
+     * @return
+     */
+    protected boolean getIsLogin() {
+        return Preferences.getSharedPreferences(this, Constant.LOGIN_STATE_SHARE_PRE)
+                .getBoolean(Constant.IS_LOGIN_KEY, false);
+    }
+
+    /**
+     * 更新用户信息
+     *
+     * @param userName
+     * @param password
+     */
+    protected void updateUserInfo(String userName, String password) {
+        Preferences.getSharedPreferencesEditor(this, Constant.AUTO_LOGIN_SHARE_PRE)
+                .putString(Constant.USER_NAME_KEY, userName)
+                .putString(Constant.PASSWORD_KEY, password)
+                .apply();
     }
 }

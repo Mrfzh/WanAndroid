@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -28,8 +30,8 @@ public class ShowArticleActivity extends BaseActivity {
     WebView mShowArticleWebView;
     @BindView(R.id.base_toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.pb_show_article_progress_bar)
-    ProgressBar mProgressBar;
+//    @BindView(R.id.pb_show_article_progress_bar)  //用Butterknife绑定后多次点击item出错，显示空指针异常
+    private ProgressBar mProgressBar;
 
     @Override
     protected int getLayoutId() {
@@ -45,6 +47,8 @@ public class ShowArticleActivity extends BaseActivity {
     @Override
     protected void initView() {
         mShowArticleWebView.getSettings().setJavaScriptEnabled(true);
+
+        mProgressBar = findViewById(R.id.pb_show_article_progress_bar);
         WebViewClient webViewClient = new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -71,8 +75,18 @@ public class ShowArticleActivity extends BaseActivity {
     }
 
     @Override
+    protected void doInOnCreate() {
+
+    }
+
+    @Override
     protected Toolbar getToolbar() {
         return mToolbar;
+    }
+
+    @Override
+    protected boolean setToolbarBackIcon() {
+        return true;
     }
 
     @Override
@@ -87,7 +101,26 @@ public class ShowArticleActivity extends BaseActivity {
         super.initToolbar();
         setToolbarTitle(mTitle);
         mToolbar.setTitleTextAppearance(this, R.style.ArticleToolbarTitle);
-        mToolbar.setNavigationIcon(R.mipmap.back);
-        mToolbar.setNavigationOnClickListener(v -> finish());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_show_article, menu);   //设置菜单
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {   //处理菜单项的点击
+        switch (item.getItemId()) {
+            case R.id.menu_show_article_collect:
+                break;
+            case R.id.menu_show_article_share:
+                break;
+            case R.id.menu_show_article_open_in_browser:
+                break;
+            default:
+                break;
+        }
+        return true;
     }
 }

@@ -38,6 +38,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
 
     private static final String TAG = "fzh";
     public static final String UPDATE_ACTION = "com.feng.main.update";
+    public static final String UPDATE_TAG = "username";
 
     @BindView(R.id.dv_main_draw_layout)
     DrawerLayout mMainDrawLayout;
@@ -62,7 +63,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
     @BindColor(R.color.color_tab_four)
     int mTabFourColor;
 
-    private boolean mIsLogin = false;
+    private String mOldUserName;    //之前登录的用户名
+    private Boolean mIsAutoLogin;   //是否自动登录
     private ArrayList<BaseFragment> mFragments;     //fragment集合
     private int mLastFgIndex;                       //记录上一个Fragment的索引
     private UpdateReceiver mUpdateReceiver;
@@ -85,8 +87,18 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
     }
 
     @Override
+    protected void doInOnCreate() {
+
+    }
+
+    @Override
     protected Toolbar getToolbar() {
         return mMainToolbar;
+    }
+
+    @Override
+    protected boolean setToolbarBackIcon() {
+        return false;
     }
 
     @Override
@@ -146,14 +158,14 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
      * 初始化侧边菜单栏
      */
     private void initNavigationView() {
-        if (!mIsLogin) {
+        if (!getIsLogin()) {
             //未登录时隐藏退出登录菜单项
             setLogoutItemVisible(false);
         }
         mMainNavigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.menu_main_navigation_collection:
-                    if (mIsLogin)
+                    if (getIsLogin())
                         jumpToNewActivity(CollectionActivity.class);
                     else
                         showShortToast("请先登录");
@@ -187,8 +199,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
         mHeadImage.setOnClickListener(this);
         mUserName = headerView.findViewById(R.id.tv_nav_main_header_user_name);
         mUserName.setOnClickListener(this);
-        if (mIsLogin) {
+        if (mIsAutoLogin) {
             mHeadImage.setImageResource(R.drawable.head_image);
+            mUserName.setText(mOldUserName);
         } else {
             mHeadImage.setImageResource(R.drawable.head_image_unlogin);
             mUserName.setText("登录");
@@ -197,6 +210,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
 
     @Override
     protected void initData() {
+        mOldUserName = getIntent().getStringExtra(EnterActivity.INTENT_USER);
+        mIsAutoLogin = !mOldUserName.equals("");
         initReceiver();
         initFragment();
         switchFragment(0);
@@ -240,7 +255,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
         switch (v.getId()) {
             case R.id.iv_nav_main_header_head_image:
             case R.id.tv_nav_main_header_user_name:
-                if (!mIsLogin) {
+                if (!getIsLogin()) {
                     //如果没有登录，就跳转到登录活动
                     jumpToNewActivity(LoginActivity.class);
                 }
@@ -254,7 +269,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
     public void logoutSuccess() {
         mProgressBar.setVisibility(View.GONE);
         showShortToast("已退出登录");
-        mIsLogin = false;
+        setIsLogin(false);
         Preferences.clearSharedPreferences(this, Constant.COOKIES_SHARE_PRE);   //清除cookies
         setLogoutItemVisible(false);    //隐藏退出登录菜单项
         mHeadImage.setImageResource(R.drawable.head_image_unlogin);
@@ -272,8 +287,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
         @Override
         public void onReceive(Context context, Intent intent) {
             mHeadImage.setImageResource(R.drawable.head_image);
-            mUserName.setText(intent.getStringExtra(LoginActivity.UPDATE_TAG));
-            mIsLogin = true;
+            mUserName.setText(intent.getStringExtra(UPDATE_TAG));
+            setIsLogin(true);
             setLogoutItemVisible(true);     //显示退出登录菜单项
         }
     }

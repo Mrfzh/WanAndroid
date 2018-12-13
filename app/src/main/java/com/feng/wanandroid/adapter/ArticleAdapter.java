@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.feng.wanandroid.R;
 import com.feng.wanandroid.base.BasePagingLoadAdapter;
 import com.feng.wanandroid.config.Constant;
-import com.feng.wanandroid.entity.HomeArticleData;
+import com.feng.wanandroid.entity.ArticleData;
 
 import java.util.List;
 
@@ -22,13 +22,13 @@ import butterknife.ButterKnife;
  * @author Feng Zhaohao
  * Created on 2018/12/11
  */
-public class HomeArticleAdapter extends BasePagingLoadAdapter<HomeArticleData> {
+public class ArticleAdapter extends BasePagingLoadAdapter<ArticleData> {
 
     private OnClickListener clickListener;
 
     public interface OnClickListener {
 //        void clickChapter();      //点击了栏目
-        void clickCollect(boolean collect);    //点击了收藏item
+        void clickCollect(boolean collect, int id, int position);    //点击了收藏item
         void clickItem(String link, String title);
     }
 
@@ -36,7 +36,7 @@ public class HomeArticleAdapter extends BasePagingLoadAdapter<HomeArticleData> {
         this.clickListener = clickListener;
     }
 
-    public HomeArticleAdapter(Context context, List<HomeArticleData> list, LoadMoreListener loadMoreListener) {
+    public ArticleAdapter(Context context, List<ArticleData> list, LoadMoreListener loadMoreListener) {
         super(context, list, loadMoreListener);
     }
 
@@ -56,7 +56,12 @@ public class HomeArticleAdapter extends BasePagingLoadAdapter<HomeArticleData> {
         ((HomeArticleViewHolder)holder).date.setText(list.get(position).getNiceDate());
         ((HomeArticleViewHolder)holder).title.setText(list.get(position).getTitle());
         ((HomeArticleViewHolder)holder).chapter.setText(list.get(position).getChapterName());
-        ((HomeArticleViewHolder)holder).collect.setOnClickListener(v -> clickListener.clickCollect(list.get(position).isCollect()));
+        ((HomeArticleViewHolder)holder).collect.setSelected(list.get(position).isCollect());
+        ((HomeArticleViewHolder)holder).collect.setOnClickListener(v -> {
+            boolean isCollect = list.get(position).isCollect();
+//            ((HomeArticleViewHolder)holder).collect.setSelected(!isCollect);    //设置icon状态
+            clickListener.clickCollect(isCollect, list.get(position).getId(), position);
+        });
         ((HomeArticleViewHolder)holder).itemView.setOnClickListener(v -> clickListener.clickItem(list.get(position).getLink(),
                 list.get(position).getTitle()));
     }

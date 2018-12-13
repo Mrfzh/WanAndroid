@@ -18,9 +18,9 @@ public class LoginPresenter extends BasePresenter<ILoginContract.View> implement
 
 
     @Override
-    public void loginSuccess(String userName) {
+    public void loginSuccess(String userName, String password) {
         if (isAttachView()) {
-            getMvpView().loginSuccess(userName);
+            getMvpView().loginSuccess(userName, password);
         }
     }
 

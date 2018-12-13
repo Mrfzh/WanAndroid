@@ -27,7 +27,7 @@ public class ReadCookiesInterceptor implements Interceptor {
 //        HashSet<String> preferences = cookies;
         HashSet<String> preferences = (HashSet<String>) Preferences
                 .getSharedPreferences(MyApplication.getContext(), Constant.COOKIES_SHARE_PRE)
-                .getStringSet(Constant.COOKIES_TAG, new HashSet<>());
+                .getStringSet(Constant.COOKIES_KEY, new HashSet<>());
 
         for (String cookie : preferences) {
             builder.addHeader("Cookie", cookie);

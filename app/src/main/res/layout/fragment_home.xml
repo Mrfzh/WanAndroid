@@ -6,12 +6,19 @@
     android:background="@color/color_white_max"
     android:clickable="true">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_home_article_list"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srv_home_refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:overScrollMode="never"
-        android:scrollbars="none" />
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_home_article_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            android:scrollbars="none" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <ProgressBar
         android:id="@+id/pb_home"

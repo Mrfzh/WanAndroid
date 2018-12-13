@@ -2,8 +2,11 @@ package com.feng.wanandroid.presenter;
 
 import com.feng.wanandroid.base.BasePresenter;
 import com.feng.wanandroid.contract.ICollectionContract;
+import com.feng.wanandroid.entity.ArticleData;
 import com.feng.wanandroid.entity.CollectArticleBean;
 import com.feng.wanandroid.model.CollectionModel;
+
+import java.util.List;
 
 /**
  * @author Feng Zhaohao
@@ -18,9 +21,9 @@ public class CollectionPresenter extends BasePresenter<ICollectionContract.View>
     }
 
     @Override
-    public void getCollectListSuccess(CollectArticleBean collectArticleBean) {
+    public void getCollectListSuccess(List<ArticleData> articleDataList) {
         if (isAttachView()) {
-            getMvpView().getCollectListSuccess(collectArticleBean);
+            getMvpView().getCollectListSuccess(articleDataList);
         }
     }
 

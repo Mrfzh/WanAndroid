@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.feng.wanandroid.base.BasePresenter;
 import com.feng.wanandroid.contract.IHomeContract;
-import com.feng.wanandroid.entity.HomeArticleData;
+import com.feng.wanandroid.entity.ArticleData;
 import com.feng.wanandroid.model.HomeModel;
 
 import java.util.List;
@@ -21,9 +21,9 @@ public class HomePresenter extends BasePresenter<IHomeContract.View> implements 
     }
 
     @Override
-    public void getHomeArticleSuccess(List<HomeArticleData> homeArticleDataList) {
+    public void getHomeArticleSuccess(List<ArticleData> articleDataList) {
         if (isAttachView()) {
-            getMvpView().getHomeArticleSuccess(homeArticleDataList);
+            getMvpView().getHomeArticleSuccess(articleDataList);
         }
     }
 
@@ -35,8 +35,26 @@ public class HomePresenter extends BasePresenter<IHomeContract.View> implements 
     }
 
     @Override
+    public void collectSuccess(int position) {
+        if (isAttachView()) {
+            getMvpView().collectSuccess(position);
+        }
+    }
+
+    @Override
+    public void collectError(String errorMsg) {
+        if (isAttachView()) {
+            getMvpView().collectError(errorMsg);
+        }
+    }
+
+    @Override
     public void getHomeArticle(int pageIndex) {
-        Log.d("fzh", "getHomeArticle: run");
         mModel.getHomeArticle(pageIndex);
+    }
+
+    @Override
+    public void collect(int id, int position) {
+        mModel.collect(id, position);
     }
 }

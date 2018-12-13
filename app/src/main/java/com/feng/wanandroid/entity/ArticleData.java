@@ -4,7 +4,7 @@ package com.feng.wanandroid.entity;
  * @author Feng Zhaohao
  * Created on 2018/12/11
  */
-public class HomeArticleData {
+public class ArticleData {
 
     private String author;
     private String chapterName;
@@ -12,14 +12,16 @@ public class HomeArticleData {
     private String link;
     private String niceDate;
     private String title;
+    private int id;     //文章id，用于收藏和取消收藏
 
-    public HomeArticleData(String author, String chapterName, boolean collect, String link, String niceDate, String title) {
+    public ArticleData(String author, String chapterName, boolean collect, String link, String niceDate, String title, int id) {
         this.author = author;
         this.chapterName = chapterName;
         this.collect = collect;
         this.link = link;
         this.niceDate = niceDate;
         this.title = title;
+        this.id = id;
     }
 
     public String getAuthor() {
@@ -68,5 +70,13 @@ public class HomeArticleData {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

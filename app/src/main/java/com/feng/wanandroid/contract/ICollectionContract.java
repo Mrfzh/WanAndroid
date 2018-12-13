@@ -1,6 +1,9 @@
 package com.feng.wanandroid.contract;
 
+import com.feng.wanandroid.entity.ArticleData;
 import com.feng.wanandroid.entity.CollectArticleBean;
+
+import java.util.List;
 
 /**
  * @author Feng Zhaohao
@@ -8,11 +11,11 @@ import com.feng.wanandroid.entity.CollectArticleBean;
  */
 public interface ICollectionContract {
     interface View {
-        void getCollectListSuccess(CollectArticleBean collectArticleBean);
+        void getCollectListSuccess(List<ArticleData> articleDataList);
         void getCollectListError(String errorMsg);
     }
     interface Presenter {
-        void getCollectListSuccess(CollectArticleBean collectArticleBean);
+        void getCollectListSuccess(List<ArticleData> articleDataList);
         void getCollectListError(String errorMsg);
         void getCollectList(int currentPage);
     }

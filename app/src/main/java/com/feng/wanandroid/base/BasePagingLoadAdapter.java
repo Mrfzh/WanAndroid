@@ -171,6 +171,7 @@ public abstract class BasePagingLoadAdapter<T> extends RecyclerView.Adapter {
      */
     public void updateList() {
         notifyItemChanged(list.size());
+//        notifyDataSetChanged();
         setIsLoading(false);
     }
 
