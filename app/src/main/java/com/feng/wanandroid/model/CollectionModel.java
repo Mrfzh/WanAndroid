@@ -6,7 +6,7 @@ import com.feng.wanandroid.base.BaseModel;
 import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.contract.ICollectionContract;
 import com.feng.wanandroid.entity.ArticleData;
-import com.feng.wanandroid.entity.CollectArticleBean;
+import com.feng.wanandroid.entity.bean.CollectArticleBean;
 import com.feng.wanandroid.http.RetrofitHelper;
 import com.feng.wanandroid.http.api.CollectionService;
 
@@ -14,9 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author Feng Zhaohao
@@ -53,6 +51,9 @@ public class CollectionModel extends BaseModel implements ICollectionContract.Mo
                         //如果没有数据了就返回null
                         mPresenter.getCollectListSuccess(null);
                     } else {
+                        if (currentPage == 0) {
+                            mArticleDataList = new ArrayList<>();   //如果重新请求的话要重置集合
+                        }
                         for (int i = 0; i < datas.size(); i++) {
                             mArticleDataList.add(new ArticleData(datas.get(i).getAuthor(), datas.get(i).getChapterName(),
                                     true, datas.get(i).getLink(), datas.get(i).getNiceDate(), datas.get(i).getTitle()

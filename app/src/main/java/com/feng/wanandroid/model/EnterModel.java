@@ -3,7 +3,7 @@ package com.feng.wanandroid.model;
 import com.feng.wanandroid.base.BaseModel;
 import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.contract.IEnterContract;
-import com.feng.wanandroid.entity.LoginBean;
+import com.feng.wanandroid.entity.bean.LoginBean;
 import com.feng.wanandroid.http.api.AccountService;
 import com.feng.wanandroid.http.cookies.SaveCookiesInterceptor;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;

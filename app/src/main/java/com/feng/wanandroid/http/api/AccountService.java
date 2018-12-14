@@ -1,9 +1,9 @@
 package com.feng.wanandroid.http.api;
 
-import com.feng.wanandroid.entity.CollectBean;
-import com.feng.wanandroid.entity.LoginBean;
-import com.feng.wanandroid.entity.LogoutBean;
-import com.feng.wanandroid.entity.RegisterBean;
+import com.feng.wanandroid.entity.bean.CollectBean;
+import com.feng.wanandroid.entity.bean.LoginBean;
+import com.feng.wanandroid.entity.bean.LogoutBean;
+import com.feng.wanandroid.entity.bean.RegisterBean;
 
 import io.reactivex.Observable;
 import retrofit2.http.Field;

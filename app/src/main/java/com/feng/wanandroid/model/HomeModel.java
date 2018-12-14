@@ -3,8 +3,8 @@ package com.feng.wanandroid.model;
 import com.feng.wanandroid.base.BaseModel;
 import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.contract.IHomeContract;
-import com.feng.wanandroid.entity.CollectBean;
-import com.feng.wanandroid.entity.HomeArticleBean;
+import com.feng.wanandroid.entity.bean.CollectBean;
+import com.feng.wanandroid.entity.bean.HomeArticleBean;
 import com.feng.wanandroid.entity.ArticleData;
 import com.feng.wanandroid.http.RetrofitHelper;
 import com.feng.wanandroid.http.api.AccountService;
@@ -29,6 +29,7 @@ public class HomeModel extends BaseModel implements IHomeContract.Model {
     public HomeModel(IHomeContract.Presenter mPresenter) {
         this.mPresenter = mPresenter;
         mHomeService = RetrofitHelper.getInstance().getRetrofit().create(HomeService.class);
+        mAccountService = RetrofitHelper.getInstance().getRetrofit().create(AccountService.class);
     }
 
     @Override
@@ -77,8 +78,6 @@ public class HomeModel extends BaseModel implements IHomeContract.Model {
 
     @Override
     public void collect(int id, int position) {
-        mAccountService = RetrofitHelper.getInstance().getRetrofit().create(AccountService.class);
-
         execute(mAccountService.collect(id), new Observer<CollectBean>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -98,6 +97,35 @@ public class HomeModel extends BaseModel implements IHomeContract.Model {
             public void onError(Throwable e) {
                 e.printStackTrace();
                 mPresenter.collectError(Constant.ERROR_MSG);
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+
+    @Override
+    public void unCollect(int id, int position) {
+        execute(mAccountService.uncollect(id), new Observer<CollectBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(CollectBean collectBean) {
+                if (!collectBean.getErrorMsg().equals("")) {
+                    mPresenter.unCollectError(collectBean.getErrorMsg());
+                } else {
+                    mPresenter.unCollectSuccess(position);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mPresenter.unCollectError(Constant.ERROR_MSG);
             }
 
             @Override

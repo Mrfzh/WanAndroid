@@ -3,7 +3,7 @@ package com.feng.wanandroid.model;
 import com.feng.wanandroid.base.BaseModel;
 import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.contract.IMainContract;
-import com.feng.wanandroid.entity.LogoutBean;
+import com.feng.wanandroid.entity.bean.LogoutBean;
 import com.feng.wanandroid.http.RetrofitHelper;
 import com.feng.wanandroid.http.api.AccountService;
 

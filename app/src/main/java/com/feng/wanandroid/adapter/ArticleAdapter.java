@@ -29,7 +29,7 @@ public class ArticleAdapter extends BasePagingLoadAdapter<ArticleData> {
     public interface OnClickListener {
 //        void clickChapter();      //点击了栏目
         void clickCollect(boolean collect, int id, int position);    //点击了收藏item
-        void clickItem(String link, String title);
+        void clickItem(String link, String title, boolean isCollect, int id, int position);
     }
 
     public void setClickListener(OnClickListener clickListener) {
@@ -63,7 +63,7 @@ public class ArticleAdapter extends BasePagingLoadAdapter<ArticleData> {
             clickListener.clickCollect(isCollect, list.get(position).getId(), position);
         });
         ((HomeArticleViewHolder)holder).itemView.setOnClickListener(v -> clickListener.clickItem(list.get(position).getLink(),
-                list.get(position).getTitle()));
+                list.get(position).getTitle(), list.get(position).isCollect(), list.get(position).getId(), position));
     }
 
     class HomeArticleViewHolder extends RecyclerView.ViewHolder {

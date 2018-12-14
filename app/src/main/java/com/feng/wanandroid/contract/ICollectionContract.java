@@ -1,7 +1,6 @@
 package com.feng.wanandroid.contract;
 
 import com.feng.wanandroid.entity.ArticleData;
-import com.feng.wanandroid.entity.CollectArticleBean;
 
 import java.util.List;
 

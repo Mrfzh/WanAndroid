@@ -1,5 +1,6 @@
 package com.feng.wanandroid.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.feng.wanandroid.utils.EventBusUtil;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -28,6 +31,10 @@ public abstract class BaseFragment<V extends BasePresenter> extends Fragment {
         mPresenter = getPresenter();
         if (mPresenter != null) {
             mPresenter.attachView(this);
+        }
+
+        if (isRegisterEventBus()) {
+            EventBusUtil.register(this);
         }
 
         doInOnCreate();
@@ -57,10 +64,10 @@ public abstract class BaseFragment<V extends BasePresenter> extends Fragment {
         if (mPresenter != null) {
             mPresenter.detachView();
         }
-    }
 
-    public void showShortToast(String content) {
-        Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show();
+        if (isRegisterEventBus()) {
+            EventBusUtil.unregister(this);
+        }
     }
 
     /**
@@ -86,5 +93,22 @@ public abstract class BaseFragment<V extends BasePresenter> extends Fragment {
      * @return 相应的Presenter实例
      */
     protected abstract V getPresenter();
+
+    protected void showShortToast(String content) {
+        Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show();
+    }
+
+    protected void jump2Activity(Class activity) {
+        startActivity(new Intent(getContext(), activity));
+    }
+
+    /**
+     * 是否注册EventBus，注册后才可以订阅事件
+     *
+     * @return true表示绑定EventBus事件分发，默认不绑定，子类需要绑定的话复写此方法返回true.
+     */
+    protected boolean isRegisterEventBus() {
+        return false;
+    }
 
 }

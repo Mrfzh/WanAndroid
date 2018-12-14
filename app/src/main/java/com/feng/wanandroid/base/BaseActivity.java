@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.feng.wanandroid.R;
 import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.utils.BaseUtils;
+import com.feng.wanandroid.utils.EventBusUtil;
 import com.feng.wanandroid.utils.Preferences;
 
 import java.util.Objects;
@@ -38,6 +39,10 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
             mPresenter.attachView(this);
         }
 
+        if (isRegisterEventBus()) {
+            EventBusUtil.register(this);
+        }
+
         initData();
         initToolbar();
         initView();
@@ -47,12 +52,18 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         if (unBinder != null && unBinder != Unbinder.EMPTY) {
             unBinder.unbind();
             unBinder = null;
         }
+
         if (mPresenter != null) {
             mPresenter.detachView();
+        }
+
+        if (isRegisterEventBus()) {
+            EventBusUtil.unregister(this);
         }
     }
 
@@ -198,5 +209,14 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
                 .putString(Constant.USER_NAME_KEY, userName)
                 .putString(Constant.PASSWORD_KEY, password)
                 .apply();
+    }
+
+    /**
+     * 是否注册EventBus，注册后才可以订阅事件
+     *
+     * @return true表示绑定EventBus事件分发，默认不绑定，子类需要绑定的话复写此方法返回true.
+     */
+    protected boolean isRegisterEventBus() {
+        return false;
     }
 }

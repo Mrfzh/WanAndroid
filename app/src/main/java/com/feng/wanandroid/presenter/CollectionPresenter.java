@@ -3,7 +3,6 @@ package com.feng.wanandroid.presenter;
 import com.feng.wanandroid.base.BasePresenter;
 import com.feng.wanandroid.contract.ICollectionContract;
 import com.feng.wanandroid.entity.ArticleData;
-import com.feng.wanandroid.entity.CollectArticleBean;
 import com.feng.wanandroid.model.CollectionModel;
 
 import java.util.List;

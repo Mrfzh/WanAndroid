@@ -1,7 +1,5 @@
 package com.feng.wanandroid.presenter;
 
-import android.util.Log;
-
 import com.feng.wanandroid.base.BasePresenter;
 import com.feng.wanandroid.contract.IHomeContract;
 import com.feng.wanandroid.entity.ArticleData;
@@ -49,6 +47,21 @@ public class HomePresenter extends BasePresenter<IHomeContract.View> implements 
     }
 
     @Override
+    public void unCollectSuccess(int position) {
+        if (isAttachView()) {
+            getMvpView().unCollectSuccess(position);
+        }
+    }
+
+    @Override
+    public void unCollectError(String errorMsg) {
+        if (isAttachView()) {
+            getMvpView().unCollectError(errorMsg);
+        }
+    }
+
+
+    @Override
     public void getHomeArticle(int pageIndex) {
         mModel.getHomeArticle(pageIndex);
     }
@@ -56,5 +69,10 @@ public class HomePresenter extends BasePresenter<IHomeContract.View> implements 
     @Override
     public void collect(int id, int position) {
         mModel.collect(id, position);
+    }
+
+    @Override
+    public void unCollect(int id, int position) {
+        mModel.unCollect(id, position);
     }
 }

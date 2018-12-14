@@ -14,17 +14,23 @@ public interface IHomeContract {
         void getHomeArticleError(String errorMsg);
         void collectSuccess(int position);
         void collectError(String errorMsg);
+        void unCollectSuccess(int position);
+        void unCollectError(String errorMsg);
     }
     interface Presenter {
         void getHomeArticleSuccess(List<ArticleData> articleDataList);
         void getHomeArticleError(String errorMsg);
         void collectSuccess(int position);
         void collectError(String errorMsg);
+        void unCollectSuccess(int position);
+        void unCollectError(String errorMsg);
         void getHomeArticle(int pageIndex);
         void collect(int id, int position);
+        void unCollect(int id, int position);
     }
     interface Model {
         void getHomeArticle(int pageIndex);
         void collect(int id, int position);
+        void unCollect(int id, int position);
     }
 }

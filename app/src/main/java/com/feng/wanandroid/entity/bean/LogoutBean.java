@@ -1,10 +1,10 @@
-package com.feng.wanandroid.entity;
+package com.feng.wanandroid.entity.bean;
 
 /**
  * @author Feng Zhaohao
- * Created on 2018/12/13
+ * Created on 2018/12/9
  */
-public class CollectBean {
+public class LogoutBean {
 
     /**
      * data : null

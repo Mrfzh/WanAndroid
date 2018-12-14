@@ -1,4 +1,4 @@
-package com.feng.wanandroid.entity;
+package com.feng.wanandroid.entity.bean;
 
 import java.util.List;
 

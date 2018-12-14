@@ -1,6 +1,6 @@
 package com.feng.wanandroid.http.api;
 
-import com.feng.wanandroid.entity.HomeArticleBean;
+import com.feng.wanandroid.entity.bean.HomeArticleBean;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
