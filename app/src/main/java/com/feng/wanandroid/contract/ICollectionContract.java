@@ -1,6 +1,6 @@
 package com.feng.wanandroid.contract;
 
-import com.feng.wanandroid.entity.ArticleData;
+import com.feng.wanandroid.entity.data.ArticleData;
 
 import java.util.List;
 

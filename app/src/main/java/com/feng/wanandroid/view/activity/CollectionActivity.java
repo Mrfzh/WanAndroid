@@ -17,7 +17,7 @@ import com.feng.wanandroid.base.BasePagingLoadAdapter;
 import com.feng.wanandroid.config.EventBusCode;
 import com.feng.wanandroid.contract.ICollectionContract;
 import com.feng.wanandroid.contract.IHomeContract;
-import com.feng.wanandroid.entity.ArticleData;
+import com.feng.wanandroid.entity.data.ArticleData;
 import com.feng.wanandroid.entity.eventbus.CollectionEvent;
 import com.feng.wanandroid.entity.eventbus.Event;
 import com.feng.wanandroid.entity.eventbus.HomeEvent;
@@ -145,15 +145,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
                         jumpToNewActivity(ShowArticleActivity.class);
                     }
                 });
-                mCollectionRv.addOnScrollListener(new LoadMoreScrollListener(mAdapter) {
-                    @Override
-                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                        int topRowVerticalPosition =
-                                (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
-                        mSwipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
-                    }
-
-                });
+                mCollectionRv.addOnScrollListener(new LoadMoreScrollListener(mAdapter));
                 mCollectionRv.setAdapter(mAdapter);
             } else {
                 if (articleDataList == null) {

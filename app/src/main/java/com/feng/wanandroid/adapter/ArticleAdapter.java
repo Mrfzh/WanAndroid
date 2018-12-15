@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.feng.wanandroid.R;
 import com.feng.wanandroid.base.BasePagingLoadAdapter;
 import com.feng.wanandroid.config.Constant;
-import com.feng.wanandroid.entity.ArticleData;
+import com.feng.wanandroid.entity.data.ArticleData;
 
 import java.util.List;
 

@@ -15,7 +15,7 @@ import com.feng.wanandroid.R;
 import com.feng.wanandroid.base.BaseActivity;
 import com.feng.wanandroid.config.EventBusCode;
 import com.feng.wanandroid.contract.IHomeContract;
-import com.feng.wanandroid.entity.ArticleData;
+import com.feng.wanandroid.entity.data.ArticleData;
 import com.feng.wanandroid.entity.eventbus.CollectionEvent;
 import com.feng.wanandroid.entity.eventbus.Event;
 import com.feng.wanandroid.entity.eventbus.HomeEvent;

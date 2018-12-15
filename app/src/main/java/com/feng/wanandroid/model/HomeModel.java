@@ -5,7 +5,7 @@ import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.contract.IHomeContract;
 import com.feng.wanandroid.entity.bean.CollectBean;
 import com.feng.wanandroid.entity.bean.HomeArticleBean;
-import com.feng.wanandroid.entity.ArticleData;
+import com.feng.wanandroid.entity.data.ArticleData;
 import com.feng.wanandroid.http.RetrofitHelper;
 import com.feng.wanandroid.http.api.AccountService;
 import com.feng.wanandroid.http.api.HomeService;

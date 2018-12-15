@@ -4,6 +4,9 @@
         <item android:id="@+id/menu_main_navigation_collection"
             android:title="我的收藏"
             android:icon="@drawable/collect_before" />
+        <item android:id="@+id/menu_main_navigation_switch_account"
+            android:title="切换账号"
+            android:icon="@drawable/switch_account"/>
         <item android:id="@+id/menu_main_navigation_logout"
             android:title="退出登录"
             android:icon="@drawable/logout"/>

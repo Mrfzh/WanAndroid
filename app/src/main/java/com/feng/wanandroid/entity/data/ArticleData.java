@@ -1,4 +1,4 @@
-package com.feng.wanandroid.entity;
+package com.feng.wanandroid.entity.data;
 
 /**
  * @author Feng Zhaohao

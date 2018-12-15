@@ -2,7 +2,7 @@ package com.feng.wanandroid.presenter;
 
 import com.feng.wanandroid.base.BasePresenter;
 import com.feng.wanandroid.contract.IHomeContract;
-import com.feng.wanandroid.entity.ArticleData;
+import com.feng.wanandroid.entity.data.ArticleData;
 import com.feng.wanandroid.model.HomeModel;
 
 import java.util.List;

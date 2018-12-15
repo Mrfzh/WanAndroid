@@ -10,4 +10,9 @@ public class EventBusCode {
     public static final int Collection2ShowArticle = 2;
     public static final int ShowArticle2Collection = 3;
     public static final int Collection2Home = 4;
+    public static final int Register2Home = 5;
+    public static final int Login2Home = 6;
+    public static final int Register2Main = 7;
+    public static final int Login2Main = 8;
+    public static final int Main2Home = 9;
 }

@@ -9,9 +9,14 @@ import android.widget.ProgressBar;
 
 import com.feng.wanandroid.R;
 import com.feng.wanandroid.base.BaseActivity;
+import com.feng.wanandroid.config.EventBusCode;
 import com.feng.wanandroid.contract.ILoginContract;
+import com.feng.wanandroid.entity.eventbus.Event;
+import com.feng.wanandroid.entity.eventbus.HomeEvent;
+import com.feng.wanandroid.entity.eventbus.MainEvent;
 import com.feng.wanandroid.presenter.LoginPresenter;
 import com.feng.wanandroid.utils.BaseUtils;
+import com.feng.wanandroid.utils.EventBusUtil;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -74,9 +79,14 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements ILogi
         showShortToast("登录成功");
         updateUserInfo(userName, password);     //更新存储在本地的用户信息
         setIsLogin(true);
-        Intent intent = new Intent(MainActivity.UPDATE_ACTION);
-        intent.putExtra(MainActivity.UPDATE_TAG, userName);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+        //更新用户信息
+        Event<MainEvent> mainEvent = new Event<>(EventBusCode.Login2Main, new MainEvent(userName));
+        EventBusUtil.sendEvent(mainEvent);
+        //更新首页文章
+        Event<HomeEvent> homeEvent = new Event<>(EventBusCode.Login2Home, new HomeEvent(true));
+        EventBusUtil.sendEvent(homeEvent);      //注意：如果一开始就是登陆界面比首页更早弹出，这里要改为StickEvent
+
         finish();
     }
 

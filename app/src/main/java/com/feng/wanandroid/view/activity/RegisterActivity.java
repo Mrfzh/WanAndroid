@@ -11,9 +11,14 @@ import android.widget.TextView;
 import com.feng.wanandroid.R;
 import com.feng.wanandroid.base.BaseActivity;
 import com.feng.wanandroid.base.BasePresenter;
+import com.feng.wanandroid.config.EventBusCode;
 import com.feng.wanandroid.contract.IRegisterContract;
+import com.feng.wanandroid.entity.eventbus.Event;
+import com.feng.wanandroid.entity.eventbus.HomeEvent;
+import com.feng.wanandroid.entity.eventbus.MainEvent;
 import com.feng.wanandroid.presenter.RegisterPresenter;
 import com.feng.wanandroid.utils.BaseUtils;
+import com.feng.wanandroid.utils.EventBusUtil;
 
 import butterknife.BindView;
 
@@ -85,9 +90,14 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
         mProgressBar.setVisibility(View.GONE);
         showShortToast("注册成功");
         updateUserInfo(userName, password);     //更新用户信息
-        Intent intent = new Intent(MainActivity.UPDATE_ACTION);
-        intent.putExtra(MainActivity.UPDATE_TAG, userName);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+        //更新用户信息
+        Event<MainEvent> mainEvent = new Event<>(EventBusCode.Register2Main, new MainEvent(userName));
+        EventBusUtil.sendEvent(mainEvent);
+        //更新首页文章
+        Event<HomeEvent> homeEvent = new Event<>(EventBusCode.Register2Home, new HomeEvent(true));
+        EventBusUtil.sendEvent(homeEvent);
+
         finish();
     }
 

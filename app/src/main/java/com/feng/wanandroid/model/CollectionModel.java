@@ -5,7 +5,7 @@ import android.annotation.SuppressLint;
 import com.feng.wanandroid.base.BaseModel;
 import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.contract.ICollectionContract;
-import com.feng.wanandroid.entity.ArticleData;
+import com.feng.wanandroid.entity.data.ArticleData;
 import com.feng.wanandroid.entity.bean.CollectArticleBean;
 import com.feng.wanandroid.http.RetrofitHelper;
 import com.feng.wanandroid.http.api.CollectionService;

@@ -1,6 +1,5 @@
 package com.feng.wanandroid.view.fragment;
 
-import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +13,7 @@ import com.feng.wanandroid.base.BaseFragment;
 import com.feng.wanandroid.base.BasePagingLoadAdapter;
 import com.feng.wanandroid.config.EventBusCode;
 import com.feng.wanandroid.contract.IHomeContract;
-import com.feng.wanandroid.entity.ArticleData;
+import com.feng.wanandroid.entity.data.ArticleData;
 import com.feng.wanandroid.entity.eventbus.Event;
 import com.feng.wanandroid.entity.eventbus.HomeEvent;
 import com.feng.wanandroid.entity.eventbus.ShowArticleEvent;
@@ -197,6 +196,9 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
                 }
                 break;
             case EventBusCode.Collection2Home:
+            case EventBusCode.Register2Home:
+            case EventBusCode.Login2Home:
+            case EventBusCode.Main2Home:
                 if (event.getData().isRefresh()) {
                     //刷新列表
                     refresh();
