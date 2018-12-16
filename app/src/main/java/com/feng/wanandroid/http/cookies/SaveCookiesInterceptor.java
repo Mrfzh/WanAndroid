@@ -27,7 +27,6 @@ public class SaveCookiesInterceptor implements Interceptor {
 
             for (String header : originalResponse.headers("Set-Cookie")) {
                 cookies.add(header);
-                Log.d("fzh", "save :" + header);
             }
 
             Preferences.getSharedPreferencesEditor(MyApplication.getContext(), Constant.COOKIES_SHARE_PRE)

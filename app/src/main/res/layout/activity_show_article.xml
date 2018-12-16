@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <include layout="@layout/base_toolbar"
-        android:id="@+id/base_toolbar"/>
+        android:id="@+id/base_toolbar" />
 
     <ProgressBar
         android:id="@+id/pb_show_article_progress_bar"
@@ -17,7 +17,7 @@
         android:max="100"
         android:progress="0"
         android:indeterminateTint="@color/color_hor_progress_bar"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <WebView
         android:id="@+id/wv_show_article_web_view"

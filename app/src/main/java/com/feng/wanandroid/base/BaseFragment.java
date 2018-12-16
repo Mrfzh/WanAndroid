@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.feng.wanandroid.utils.EventBusUtil;
+import com.feng.wanandroid.utils.ToastUtil;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -95,11 +96,22 @@ public abstract class BaseFragment<V extends BasePresenter> extends Fragment {
     protected abstract V getPresenter();
 
     protected void showShortToast(String content) {
-        Toast.makeText(getContext(), content, Toast.LENGTH_SHORT).show();
+        ToastUtil.showToast(getContext(), content);
     }
 
     protected void jump2Activity(Class activity) {
         startActivity(new Intent(getContext(), activity));
+    }
+
+    /**
+     * 带Bundle的跳转活动
+     *
+     * @param activity 新活动.class
+     * @param bundle
+     */
+    protected void jump2ActivityWithBundle(Class activity, Bundle bundle) {
+        Intent intent = new Intent(getContext(), activity);
+        startActivity(intent, bundle);
     }
 
     /**

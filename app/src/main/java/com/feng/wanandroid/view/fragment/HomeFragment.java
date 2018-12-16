@@ -1,11 +1,13 @@
 package com.feng.wanandroid.view.fragment;
 
+import android.app.ActivityOptions;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.feng.wanandroid.R;
 import com.feng.wanandroid.adapter.ArticleAdapter;
@@ -94,21 +96,23 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
      */
     @Override
     public void getHomeArticleSuccess(List<ArticleData> articleDataList) {
-        mArticleDataList = articleDataList;
         mProgressBar.setVisibility(View.GONE);
         mSwipeRefreshLayout.setRefreshing(false);
+
         if (mArticleAdapter == null) {
-            if (mArticleDataList == null) {
+            if (articleDataList == null) {
                 showShortToast("列表没有内容");
             } else {    //初始化adapter并进行RV的配置
+                mArticleDataList = articleDataList;
                 initAdapter();
                 mArticleRv.setAdapter(mArticleAdapter);
                 mArticleRv.addOnScrollListener(new LoadMoreScrollListener(mArticleAdapter));
             }
         } else {
-            if (mArticleDataList == null) {
+            if (articleDataList == null) {
                 mArticleAdapter.setLastedStatus();
             } else {
+                mArticleDataList = articleDataList;
                 mArticleAdapter.updateList();
             }
         }
@@ -139,6 +143,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
     public void collectSuccess(int position) {
         mArticleDataList.get(position).setCollect(true);    //更新集合信息
         mArticleAdapter.notifyDataSetChanged(); //更新列表
+        showShortToast("收藏成功");
     }
 
     /**
@@ -160,6 +165,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
     public void unCollectSuccess(int position) {
         mArticleDataList.get(position).setCollect(false);
         mArticleAdapter.notifyDataSetChanged();
+        showShortToast("取消收藏");
     }
 
     /**

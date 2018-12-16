@@ -20,7 +20,7 @@ public class MainModel extends BaseModel implements IMainContract.Model {
 
     public MainModel(IMainContract.Presenter mPresenter) {
         this.mPresenter = mPresenter;
-        mAccountService = RetrofitHelper.getInstance().getRetrofit().create(AccountService.class);
+        mAccountService = RetrofitHelper.getInstance().create(AccountService.class);
     }
 
     @Override

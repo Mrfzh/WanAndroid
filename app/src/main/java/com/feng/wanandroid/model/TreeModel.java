@@ -24,7 +24,7 @@ public class TreeModel extends BaseModel implements ITreeContract.Model {
 
     public TreeModel(ITreeContract.Presenter mPresenter) {
         this.mPresenter = mPresenter;
-        mTreeService = RetrofitHelper.getInstance().getRetrofit().create(TreeService.class);
+        mTreeService = RetrofitHelper.getInstance().create(TreeService.class);
     }
 
     @Override

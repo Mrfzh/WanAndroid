@@ -28,8 +28,8 @@ public class HomeModel extends BaseModel implements IHomeContract.Model {
 
     public HomeModel(IHomeContract.Presenter mPresenter) {
         this.mPresenter = mPresenter;
-        mHomeService = RetrofitHelper.getInstance().getRetrofit().create(HomeService.class);
-        mAccountService = RetrofitHelper.getInstance().getRetrofit().create(AccountService.class);
+        mHomeService = RetrofitHelper.getInstance().create(HomeService.class);
+        mAccountService = RetrofitHelper.getInstance().create(AccountService.class);
     }
 
     @Override

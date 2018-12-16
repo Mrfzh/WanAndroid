@@ -17,31 +17,39 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitHelper {
 
     private Retrofit mRetrofit;
-    private static  okhttp3.OkHttpClient.Builder mBuilder = new OkHttpClient.Builder()
-        .connectTimeout(10, TimeUnit.SECONDS)   //连接超时时间（10秒）
-        .writeTimeout(10, TimeUnit.SECONDS)     //写操作超时时间
-        .readTimeout(10, TimeUnit.SECONDS)     //读操作超时时间
-        .addInterceptor(new ReadCookiesInterceptor());  //读取cookies
-    private static RetrofitHelper mInstance = null;
 
-    public static RetrofitHelper getInstance(){
-        if(mInstance == null){
-            mInstance = new RetrofitHelper();
-        }
-        return mInstance;
+    private static class SingletonHolder {
+        private static final RetrofitHelper mInstance = new RetrofitHelper();
     }
 
-    public RetrofitHelper() {
+    public static RetrofitHelper getInstance(){
+        return SingletonHolder.mInstance;
+    }
+
+    private RetrofitHelper() {
+        okhttp3.OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)   //连接超时时间（10秒）
+                .writeTimeout(10, TimeUnit.SECONDS)     //写操作超时时间
+                .readTimeout(10, TimeUnit.SECONDS)     //读操作超时时间
+                .addInterceptor(new ReadCookiesInterceptor());  //读取cookies
+
         this.mRetrofit = new Retrofit.Builder()
                 .baseUrl(Constant.BASE_URL)
-                .client(mBuilder.build())
+                .client(builder.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
     }
 
-    public Retrofit getRetrofit(){
-        return mRetrofit;
+    /**
+     * 获取对应的Service
+     *
+     * @param service Service 的 class
+     * @param <T>
+     * @return
+     */
+    public <T> T create(Class<T> service){
+        return mRetrofit.create(service);
     }
 
 }

@@ -12,6 +12,7 @@ import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.utils.BaseUtils;
 import com.feng.wanandroid.utils.EventBusUtil;
 import com.feng.wanandroid.utils.Preferences;
+import com.feng.wanandroid.utils.ToastUtil;
 
 import java.util.Objects;
 
@@ -136,7 +137,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
      * @param content 弹出的内容
      */
     protected void showShortToast(String content) {
-        Toast.makeText(this, content, Toast.LENGTH_SHORT).show();
+        ToastUtil.showToast(this, content);
     }
 
     /**
@@ -175,6 +176,17 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     protected void jumpToNewActivity(Class activity) {
         Intent intent = new Intent(this, activity);
         startActivity(intent);
+    }
+
+    /**
+     * 带Bundle的跳转活动
+     *
+     * @param activity 新活动.class
+     * @param bundle
+     */
+    protected void jump2ActivityWithBundle(Class activity, Bundle bundle) {
+        Intent intent = new Intent(this, activity);
+        startActivity(intent, bundle);
     }
 
     /**

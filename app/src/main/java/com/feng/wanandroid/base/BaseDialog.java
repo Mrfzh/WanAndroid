@@ -18,7 +18,15 @@ public abstract class BaseDialog extends Dialog {
 
     public BaseDialog(@NonNull Context context) {
         super(context, R.style.MyDialog);
-        setContentView(getCustomView());
+    }
+
+    /**
+     * 初始化操作，设置好成员变量后再调用此操作
+     *
+     * @return
+     */
+    protected void init() {
+        setContentView(getCustomView());    //设置当前视图
     }
 
     /**

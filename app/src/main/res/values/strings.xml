@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">WanAndroid</string>
+
+    <string name="tran_toolbar">tran_toolbar</string>
 </resources>

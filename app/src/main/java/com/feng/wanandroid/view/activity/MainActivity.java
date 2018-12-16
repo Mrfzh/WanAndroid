@@ -29,7 +29,7 @@ import com.feng.wanandroid.view.fragment.HomeFragment;
 import com.feng.wanandroid.view.fragment.NaviFragment;
 import com.feng.wanandroid.view.fragment.ProjectFragment;
 import com.feng.wanandroid.view.fragment.TreeFragment;
-import com.feng.wanandroid.widget.dialog.LogoutDialog;
+import com.feng.wanandroid.widget.dialog.TipDialog;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -171,22 +171,22 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
                     break;
                 //退出登录
                 case R.id.menu_main_navigation_logout:
-                    LogoutDialog logoutDialog = new LogoutDialog(this);
-                    logoutDialog.setOnClickListener(new LogoutDialog.OnClickListener() {
-                        @Override
-                        public void clickEnsure() {
-                            logoutDialog.dismiss();
-                            mMainDrawLayout.closeDrawers();
-                            mPresenter.logout();
-                            mProgressBar.setVisibility(View.VISIBLE);
-                        }
+                    TipDialog tipDialog = new TipDialog.Builder(MainActivity.this)
+                            .setContent("确定要退出登录？")
+                            .setOnClickListener(new TipDialog.OnClickListener() {
+                                @Override
+                                public void clickEnsure() {
+                                    mMainDrawLayout.closeDrawers();
+                                    mPresenter.logout();
+                                    mProgressBar.setVisibility(View.VISIBLE);
+                                }
 
-                        @Override
-                        public void clickCancel() {
-                            logoutDialog.dismiss();
-                        }
-                    });
-                    logoutDialog.show();
+                                @Override
+                                public void clickCancel() {
+                                }
+                            })
+                            .build();
+                    tipDialog.show();
                     break;
                 //切换账号
                 case R.id.menu_main_navigation_switch_account:

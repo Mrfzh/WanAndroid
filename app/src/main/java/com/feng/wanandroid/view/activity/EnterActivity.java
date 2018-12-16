@@ -16,7 +16,7 @@ import com.feng.wanandroid.utils.Preferences;
 public class EnterActivity extends BaseActivity<EnterPresenter> implements IEnterContract.View {
 
     public static final String INTENT_USER = "intent_user";
-    private static final int DELAY_TIME = 2 * 1000;
+    private static final int DELAY_TIME = 3 * 500;
     private String mUserName;
     private String mPassword;
 

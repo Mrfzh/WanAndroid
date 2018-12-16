@@ -22,6 +22,8 @@ import com.feng.wanandroid.entity.eventbus.HomeEvent;
 import com.feng.wanandroid.entity.eventbus.ShowArticleEvent;
 import com.feng.wanandroid.presenter.HomePresenter;
 import com.feng.wanandroid.utils.EventBusUtil;
+import com.feng.wanandroid.utils.IntentUtil;
+import com.feng.wanandroid.utils.ShareUtil;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -143,8 +145,11 @@ public class ShowArticleActivity extends BaseActivity<HomePresenter> implements 
                 }
                 break;
             case R.id.menu_show_article_share:
+                String shareText = "【WanAndroid分享】" + mTitle + ",链接" + mLink;
+                ShareUtil.shareText(shareText, ShowArticleActivity.this);
                 break;
             case R.id.menu_show_article_open_in_browser:
+                IntentUtil.callLocalBrowser(ShowArticleActivity.this, mLink);
                 break;
             default:
                 break;

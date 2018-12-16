@@ -1,6 +1,7 @@
 package com.feng.wanandroid.model;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import com.feng.wanandroid.base.BaseModel;
 import com.feng.wanandroid.config.Constant;
@@ -25,10 +26,11 @@ public class CollectionModel extends BaseModel implements ICollectionContract.Mo
     private ICollectionContract.Presenter mPresenter;
     private CollectionService mCollectionService;
     List<ArticleData> mArticleDataList = new ArrayList<>();
+    private static final String TAG = "CollectionActivity";
 
     public CollectionModel(ICollectionContract.Presenter mPresenter) {
         this.mPresenter = mPresenter;
-        mCollectionService = RetrofitHelper.getInstance().getRetrofit().create(CollectionService.class);
+        mCollectionService = RetrofitHelper.getInstance().create(CollectionService.class);
     }
 
     @SuppressLint("CheckResult")

@@ -60,7 +60,7 @@ public class ArticleAdapter extends BasePagingLoadAdapter<ArticleData> {
         ((HomeArticleViewHolder)holder).collect.setOnClickListener(v -> {
             boolean isCollect = list.get(position).isCollect();
 //            ((HomeArticleViewHolder)holder).collect.setSelected(!isCollect);    //设置icon状态
-            clickListener.clickCollect(isCollect, list.get(position).getId(), position);
+            clickListener.clickCollect(isCollect, list.get(position).getId(), holder.getAdapterPosition());
         });
         ((HomeArticleViewHolder)holder).itemView.setOnClickListener(v -> clickListener.clickItem(list.get(position).getLink(),
                 list.get(position).getTitle(), list.get(position).isCollect(), list.get(position).getId(), position));

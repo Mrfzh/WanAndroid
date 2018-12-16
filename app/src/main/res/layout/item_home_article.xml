@@ -9,7 +9,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="155dp">
+        android:layout_height="155dp"
+        android:background="@drawable/ripple_item_click">
 
         <RelativeLayout
             android:id="@+id/rv_home_article_top"
@@ -57,7 +58,8 @@
             android:maxLines="2"
             android:layout_below="@id/rv_home_article_top"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="30dp"/>
+            android:layout_marginEnd="30dp"
+            android:transitionName="@string/tran_toolbar"/>
 
         <TextView
             android:id="@+id/tv_home_article_chapter"
@@ -73,8 +75,9 @@
 
         <ImageView
             android:id="@+id/iv_home_article_collect"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:padding="2dp"
             android:src="@drawable/selector_collect_image"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"

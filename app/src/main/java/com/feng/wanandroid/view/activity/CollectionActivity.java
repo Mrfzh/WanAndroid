@@ -24,9 +24,9 @@ import com.feng.wanandroid.entity.eventbus.HomeEvent;
 import com.feng.wanandroid.entity.eventbus.ShowArticleEvent;
 import com.feng.wanandroid.presenter.CollectionPresenter;
 import com.feng.wanandroid.presenter.HomePresenter;
-import com.feng.wanandroid.utils.BaseUtils;
 import com.feng.wanandroid.utils.EventBusUtil;
 import com.feng.wanandroid.widget.LoadMoreScrollListener;
+import com.feng.wanandroid.widget.dialog.TipDialog;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -77,7 +77,6 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
 
         mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.color_tab_one));
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            Log.d(TAG, "refresh");
             new Handler().postDelayed(this::refresh, DELAY_TIME);
         });
     }
@@ -119,38 +118,25 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
 
     @Override
     public void getCollectListSuccess(List<ArticleData> articleDataList) {
-        mArticleDataList = articleDataList;
         mProgressBar.setVisibility(View.GONE);
         mSwipeRefreshLayout.setRefreshing(false);
         //总的来说就是根据articleDataList和mAdapter是否为null分为4种情况
         if (articleDataList == null && mAdapter == null) {
-            mNoArticleTv.setVisibility(View.VISIBLE);
+            mNoArticleTv.setVisibility(View.VISIBLE);   //第一次载入没有数据时提示‘无收藏文章’
         } else {
-            mNoArticleTv.setVisibility(View.GONE);
-            if (articleDataList !=  null && mAdapter == null) { //初始化adapter
-                mAdapter = new ArticleAdapter(this, mArticleDataList, this);
-                mAdapter.setClickListener(new ArticleAdapter.OnClickListener() {
-                    @Override
-                    public void clickCollect(boolean collect, int id, int position) {
-                        if (collect) {
-                            mHomePresenter.unCollect(id, position);
-                        }
-                    }
-
-                    @Override
-                    public void clickItem(String link, String title, boolean isCollect, int id, int position) {
-                        Event<ShowArticleEvent> event = new Event<>(EventBusCode.Collection2ShowArticle, new ShowArticleEvent(link,
-                                title, isCollect, id, position, true));
-                        EventBusUtil.sendStickyEvent(event);
-                        jumpToNewActivity(ShowArticleActivity.class);
-                    }
-                });
+            if (articleDataList !=  null && mAdapter == null) {
+                mNoArticleTv.setVisibility(View.GONE);  //这时才隐藏‘无文章提示’
+                mArticleDataList = articleDataList;     //在articleDataList !=  null时才设置mList
+                //初始化adapter
+                initAdapter();
                 mCollectionRv.addOnScrollListener(new LoadMoreScrollListener(mAdapter));
                 mCollectionRv.setAdapter(mAdapter);
             } else {
                 if (articleDataList == null) {
                     mAdapter.setLastedStatus(); //显示没有更多
                 } else {
+                    mArticleDataList = articleDataList;  //同上，在返回的list不是null时才设置mList，
+                                                        // 保证mList不会在有item的时候被置为空，不然取消收藏会失败
                     mAdapter.updateList();  //更新列表
                 }
             }
@@ -212,9 +198,18 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
 
     @Override
     public void unCollectSuccess(int position) {
-        //更新收藏列表
-        BaseUtils.removeListItem(mArticleDataList, position);
-        mAdapter.notifyDataSetChanged();
+        if (mArticleDataList != null) {
+            //更新收藏列表
+            mArticleDataList.remove(position);
+            mAdapter.notifyItemRemoved(position);
+            if (position != mArticleDataList.size()) {
+                mAdapter.notifyItemRangeChanged(position, mArticleDataList.size() - position);
+            }
+            //当没有收藏文章时提示文字
+            if (mArticleDataList.size() == 0) {
+                mNoArticleTv.setVisibility(View.VISIBLE);
+            }
+        }
         //更新首页文章
         Event<HomeEvent> event = new Event<>(EventBusCode.Collection2Home, new HomeEvent(true));
         EventBusUtil.sendEvent(event);
@@ -233,5 +228,39 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
         currentPage = 0;
         mAdapter = null;     //重置adapter，等于重头再来
         mPresenter.getCollectList(currentPage++);
+    }
+
+    private void initAdapter() {
+        mAdapter = new ArticleAdapter(this, mArticleDataList, this);
+        mAdapter.setClickListener(new ArticleAdapter.OnClickListener() {
+            @Override
+            public void clickCollect(boolean collect, int id, int position) {
+                if (collect) {
+                    TipDialog tipDialog = new TipDialog.Builder(CollectionActivity.this)
+                            .setContent("确定要取消收藏？")
+                            .setOnClickListener(new TipDialog.OnClickListener() {
+                                @Override
+                                public void clickEnsure() {
+                                    mHomePresenter.unCollect(id, position);
+                                }
+
+                                @Override
+                                public void clickCancel() {
+
+                                }
+                            })
+                            .build();
+                    tipDialog.show();
+                }
+            }
+
+            @Override
+            public void clickItem(String link, String title, boolean isCollect, int id, int position) {
+                Event<ShowArticleEvent> event = new Event<>(EventBusCode.Collection2ShowArticle, new ShowArticleEvent(link,
+                        title, isCollect, id, position, true));
+                EventBusUtil.sendStickyEvent(event);
+                jumpToNewActivity(ShowArticleActivity.class);
+            }
+        });
     }
 }

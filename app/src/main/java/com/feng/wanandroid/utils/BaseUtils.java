@@ -45,14 +45,4 @@ public class BaseUtils {
         Objects.requireNonNull(imm).toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
-    public static <T> void removeListItem(List<T> list, int position){
-        Iterator<T> iterator = list.iterator();
-        T target = list.get(position);
-        while (iterator.hasNext()) {
-            T item = iterator.next();
-            if (item.equals(target)) {
-                iterator.remove();
-            }
-        }
-    }
 }
