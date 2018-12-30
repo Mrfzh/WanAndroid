@@ -6,16 +6,21 @@ import android.util.Log;
 import com.feng.wanandroid.base.BaseModel;
 import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.contract.ICollectionContract;
+import com.feng.wanandroid.entity.bean.CollectBean;
 import com.feng.wanandroid.entity.data.ArticleData;
 import com.feng.wanandroid.entity.bean.CollectArticleBean;
 import com.feng.wanandroid.http.RetrofitHelper;
+import com.feng.wanandroid.http.api.AccountService;
 import com.feng.wanandroid.http.api.CollectionService;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author Feng Zhaohao
@@ -25,12 +30,14 @@ public class CollectionModel extends BaseModel implements ICollectionContract.Mo
 
     private ICollectionContract.Presenter mPresenter;
     private CollectionService mCollectionService;
-    List<ArticleData> mArticleDataList = new ArrayList<>();
-    private static final String TAG = "CollectionActivity";
+    private AccountService mAccountService;
+    private List<ArticleData> mArticleDataList = new ArrayList<>();
+    private static final String TAG = "fzh";
 
     public CollectionModel(ICollectionContract.Presenter mPresenter) {
         this.mPresenter = mPresenter;
         mCollectionService = RetrofitHelper.getInstance().create(CollectionService.class);
+        mAccountService = RetrofitHelper.getInstance().create(AccountService.class);
     }
 
     @SuppressLint("CheckResult")
@@ -77,5 +84,41 @@ public class CollectionModel extends BaseModel implements ICollectionContract.Mo
 
             }
         });
+    }
+
+    @Override
+    public void multiUnCollect(List<Integer> removeIndexList, List<Integer> idList) {
+        List<Observable<CollectBean>> observableList = new ArrayList<>();   //observable集合
+        //添加要删除收藏所对应的observable
+        for (int i = 0; i < idList.size(); i++) {
+            observableList.add(mAccountService.uncollect(idList.get(i)));
+        }
+
+        Observable.concat(observableList)   //使用concat合并多个相同的操作
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<CollectBean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(CollectBean collectBean) {
+                        if (!collectBean.getErrorMsg().equals("")) {
+                            mPresenter.multiUnCollectError(collectBean.getErrorMsg());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mPresenter.multiUnCollectError(Constant.ERROR_MSG);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mPresenter.multiUnCollectSuccess(removeIndexList);
+                    }
+                });
     }
 }

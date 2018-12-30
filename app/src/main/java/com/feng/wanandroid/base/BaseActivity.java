@@ -113,7 +113,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            toolbar.setTitleTextAppearance(this, R.style.ToolbarTitle);    //设置标题字体样式
+//            toolbar.setTitleTextAppearance(this, R.style.ToolbarTitle);    //设置标题字体样式
             if (setToolbarBackIcon()) {
                 toolbar.setNavigationIcon(R.mipmap.back);
                 toolbar.setNavigationOnClickListener(v -> finish());

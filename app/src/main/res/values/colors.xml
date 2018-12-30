@@ -51,4 +51,9 @@
 
     <color name="color_ripple_click">#dddddd</color>
 
+    <color name="color_collection_bottom_bar">#f3f3f3</color>
+    <color name="color_collection_all_choose_text">#616161</color>
+    <color name="color_collection_uncollect_text_before">#d1d1d1</color>
+    <color name="color_collection_uncollect_text_after">#ff4500</color>
+
 </resources>

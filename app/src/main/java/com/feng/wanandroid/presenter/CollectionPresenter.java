@@ -34,7 +34,26 @@ public class CollectionPresenter extends BasePresenter<ICollectionContract.View>
     }
 
     @Override
+    public void multiUnCollectSuccess(List<Integer> removeIndexList) {
+        if (isAttachView()) {
+            getMvpView().multiUnCollectSuccess(removeIndexList);
+        }
+    }
+
+    @Override
+    public void multiUnCollectError(String errorMsg) {
+        if (isAttachView()) {
+            getMvpView().multiUnCollectError(errorMsg);
+        }
+    }
+
+    @Override
     public void getCollectList(int currentPage) {
         mModel.getCollectList(currentPage);
+    }
+
+    @Override
+    public void multiUnCollect(List<Integer> removeIndexList, List<Integer> idList) {
+        mModel.multiUnCollect(removeIndexList, idList);
     }
 }

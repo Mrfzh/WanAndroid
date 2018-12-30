@@ -5,7 +5,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -19,9 +22,12 @@ import com.feng.wanandroid.base.BaseFragment;
 import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.config.EventBusCode;
 import com.feng.wanandroid.contract.IMainContract;
+import com.feng.wanandroid.entity.bean.CollectBean;
 import com.feng.wanandroid.entity.eventbus.Event;
 import com.feng.wanandroid.entity.eventbus.HomeEvent;
 import com.feng.wanandroid.entity.eventbus.MainEvent;
+import com.feng.wanandroid.http.RetrofitHelper;
+import com.feng.wanandroid.http.api.AccountService;
 import com.feng.wanandroid.presenter.MainPresenter;
 import com.feng.wanandroid.utils.EventBusUtil;
 import com.feng.wanandroid.utils.Preferences;
@@ -35,9 +41,15 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindColor;
 import butterknife.BindView;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity<MainPresenter> implements View.OnClickListener, IMainContract.View {
 
@@ -68,6 +80,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
     private Boolean mIsAutoLogin;   //是否自动登录
     private ArrayList<BaseFragment> mFragments;     //fragment集合
     private int mLastFgIndex;                       //记录上一个Fragment的索引
+
+    public static final String TAG = "fzh";
 
     @Override
     protected int getLayoutId() {

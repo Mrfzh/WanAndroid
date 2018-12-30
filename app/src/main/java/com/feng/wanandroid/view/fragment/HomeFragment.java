@@ -237,6 +237,11 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
                 EventBusUtil.sendStickyEvent(event);
                 jump2Activity(ShowArticleActivity.class);
             }
+
+            @Override
+            public void selectItemChanged(int num) {
+
+            }
         });
     }
 

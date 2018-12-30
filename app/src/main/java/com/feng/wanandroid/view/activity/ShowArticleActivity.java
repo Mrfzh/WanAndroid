@@ -115,7 +115,7 @@ public class ShowArticleActivity extends BaseActivity<HomePresenter> implements 
     protected void initToolbar() {
         super.initToolbar();
         setToolbarTitle(mTitle);
-        mToolbar.setTitleTextAppearance(this, R.style.ArticleToolbarTitle);
+//        mToolbar.setTitleTextAppearance(this, R.style.ArticleToolbarTitle);
     }
 
     @Override
