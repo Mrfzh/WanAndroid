@@ -1,6 +1,8 @@
 package com.feng.wanandroid.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +15,11 @@ import com.feng.wanandroid.R;
 import com.feng.wanandroid.base.BasePagingLoadAdapter;
 import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.entity.data.ArticleData;
+import com.feng.wanandroid.widget.MyImageLoader;
+import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,6 +30,8 @@ import butterknife.ButterKnife;
  * Created on 2018/12/11
  */
 public class ArticleAdapter extends BasePagingLoadAdapter<ArticleData> {
+
+    private static final int TYPE_HEADER = 3;      //header
 
     private OnClickListener clickListener;
 
@@ -56,19 +64,20 @@ public class ArticleAdapter extends BasePagingLoadAdapter<ArticleData> {
 
     @Override
     protected void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((HomeArticleViewHolder)holder).authorName.setText(list.get(position).getAuthor());
-        ((HomeArticleViewHolder)holder).date.setText(list.get(position).getNiceDate());
-        ((HomeArticleViewHolder)holder).title.setText(list.get(position).getTitle());
-        ((HomeArticleViewHolder)holder).chapter.setText(list.get(position).getChapterName());
-        ((HomeArticleViewHolder)holder).collect.setSelected(list.get(position).isCollect());
+        int listPosition = position - 1;
+        ((HomeArticleViewHolder)holder).authorName.setText(list.get(listPosition).getAuthor());
+        ((HomeArticleViewHolder)holder).date.setText(list.get(listPosition).getNiceDate());
+        ((HomeArticleViewHolder)holder).title.setText(list.get(listPosition).getTitle());
+        ((HomeArticleViewHolder)holder).chapter.setText(list.get(listPosition).getChapterName());
+        ((HomeArticleViewHolder)holder).collect.setSelected(list.get(listPosition).isCollect());
         ((HomeArticleViewHolder)holder).collect.setOnClickListener(v -> {
-            boolean isCollect = list.get(position).isCollect();
-            clickListener.clickCollect(isCollect, list.get(position).getId(), holder.getAdapterPosition());
+            boolean isCollect = list.get(listPosition).isCollect();
+            clickListener.clickCollect(isCollect, list.get(listPosition).getId(), holder.getAdapterPosition());
         });
 
         ((HomeArticleViewHolder)holder).itemView.setOnClickListener(v -> {
-            clickListener.clickItem(list.get(position).getLink(), list.get(position).getTitle(),
-                    list.get(position).isCollect(), list.get(position).getId(), position);    //普通点击
+            clickListener.clickItem(list.get(listPosition).getLink(), list.get(listPosition).getTitle(),
+                    list.get(listPosition).isCollect(), list.get(listPosition).getId(), listPosition);    //普通点击
         });
 
     }
@@ -89,6 +98,81 @@ public class ArticleAdapter extends BasePagingLoadAdapter<ArticleData> {
         public HomeArticleViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+    }
+
+    class HeaderViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.bn_home_banner)
+        Banner homeBanner;
+
+        public HeaderViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return super.getItemCount() + 1;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) {
+            return TYPE_HEADER;
+        } else {
+            if (list.size() < getPageCount()) {
+                return TYPE_ITEM;
+            } else {
+                if (position == list.size() + 1) {
+                    return TYPE_BOTTOM;
+                } else {
+                    return TYPE_ITEM;
+                }
+            }
+        }
+    }
+
+    @SuppressLint("InflateParams")
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == TYPE_HEADER) {
+            return new HeaderViewHolder(LayoutInflater.from(context).inflate(R.layout.header_home_banner, null));
+        } else {
+            return super.onCreateViewHolder(parent, viewType);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        super.onBindViewHolder(holder, position);
+        if (TYPE_HEADER == getItemViewType(position)) {
+            List<String> imageList = new ArrayList<>();
+            imageList.add("http://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png");
+            imageList.add("http://www.wanandroid.com/blogimgs/ab17e8f9-6b79-450b-8079-0f2287eb6f0f.png");
+            imageList.add("http://www.wanandroid.com/blogimgs/fb0ea461-e00a-482b-814f-4faca5761427.png");
+            imageList.add("http://www.wanandroid.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png");
+            imageList.add("http://www.wanandroid.com/blogimgs/00f83f1d-3c50-439f-b705-54a49fc3d90d.jpg");
+            imageList.add("http://www.wanandroid.com/blogimgs/90cf8c40-9489-4f9d-8936-02c9ebae31f0.png");
+            imageList.add("http://www.wanandroid.com/blogimgs/acc23063-1884-4925-bdf8-0b0364a7243e.png");
+            List<String> titleList = new ArrayList<>();
+            titleList.add("一起来做个App吧");
+            titleList.add("看看别人的面经，搞定面试~");
+            titleList.add("兄弟，要不要挑个项目学习下?");
+            titleList.add("我们新增了一个常用导航Tab~");
+            titleList.add("公众号文章列表强势上线");
+            titleList.add("JSON工具");
+            titleList.add("微信文章合集");
+
+            //header
+            ((HeaderViewHolder)holder).homeBanner.setImageLoader(new MyImageLoader())  //设置图片加载器
+                    .setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE) //指定样式
+                    .setImages(imageList)   //设置图片url集合
+                    .setBannerTitles(titleList)     //设置title集合
+                    .setDelayTime(3000)     //设置轮播时间
+                    .start();   //最后才start
         }
     }
 }

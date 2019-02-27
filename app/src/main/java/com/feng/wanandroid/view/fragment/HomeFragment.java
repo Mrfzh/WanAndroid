@@ -57,8 +57,8 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
     @BindView(R.id.srv_home_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private Banner mBanner;
-    private View mBannerView;
+//    private Banner mBanner;
+//    private View mBannerView;
 
     private ArticleAdapter mArticleAdapter;
     private List<ArticleData> mArticleDataList = new ArrayList<>();
@@ -91,33 +91,33 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
 
         mArticleRv.setLayoutManager(new LinearLayoutManager(getContext()));
 
+//
+//        List<String> imageList = new ArrayList<>();
+//        imageList.add("http://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png");
+//        imageList.add("http://www.wanandroid.com/blogimgs/ab17e8f9-6b79-450b-8079-0f2287eb6f0f.png");
+//        imageList.add("http://www.wanandroid.com/blogimgs/fb0ea461-e00a-482b-814f-4faca5761427.png");
+//        imageList.add("http://www.wanandroid.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png");
+//        imageList.add("http://www.wanandroid.com/blogimgs/00f83f1d-3c50-439f-b705-54a49fc3d90d.jpg");
+//        imageList.add("http://www.wanandroid.com/blogimgs/90cf8c40-9489-4f9d-8936-02c9ebae31f0.png");
+//        imageList.add("http://www.wanandroid.com/blogimgs/acc23063-1884-4925-bdf8-0b0364a7243e.png");
+//        List<String> titleList = new ArrayList<>();
+//        titleList.add("一起来做个App吧");
+//        titleList.add("看看别人的面经，搞定面试~");
+//        titleList.add("兄弟，要不要挑个项目学习下?");
+//        titleList.add("我们新增了一个常用导航Tab~");
+//        titleList.add("公众号文章列表强势上线");
+//        titleList.add("JSON工具");
+//        titleList.add("微信文章合集");
 
-        List<String> imageList = new ArrayList<>();
-        imageList.add("http://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png");
-        imageList.add("http://www.wanandroid.com/blogimgs/ab17e8f9-6b79-450b-8079-0f2287eb6f0f.png");
-        imageList.add("http://www.wanandroid.com/blogimgs/fb0ea461-e00a-482b-814f-4faca5761427.png");
-        imageList.add("http://www.wanandroid.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png");
-        imageList.add("http://www.wanandroid.com/blogimgs/00f83f1d-3c50-439f-b705-54a49fc3d90d.jpg");
-        imageList.add("http://www.wanandroid.com/blogimgs/90cf8c40-9489-4f9d-8936-02c9ebae31f0.png");
-        imageList.add("http://www.wanandroid.com/blogimgs/acc23063-1884-4925-bdf8-0b0364a7243e.png");
-        List<String> titleList = new ArrayList<>();
-        titleList.add("一起来做个App吧");
-        titleList.add("看看别人的面经，搞定面试~");
-        titleList.add("兄弟，要不要挑个项目学习下?");
-        titleList.add("我们新增了一个常用导航Tab~");
-        titleList.add("公众号文章列表强势上线");
-        titleList.add("JSON工具");
-        titleList.add("微信文章合集");
-
-        mBannerView = LayoutInflater.from(getContext()).inflate(R.layout.header_home_banner, null);
-        mBanner = mBannerView.findViewById(R.id.bn_home_banner);
-
-        mBanner.setImageLoader(new MyImageLoader())  //设置图片加载器
-                .setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE) //指定样式
-                .setImages(imageList)   //设置图片url集合
-                .setBannerTitles(titleList)     //设置title集合
-                .setDelayTime(3000)     //设置轮播时间
-                .start();   //最后才start
+//        mBannerView = LayoutInflater.from(getContext()).inflate(R.layout.header_home_banner, null);
+//        mBanner = mBannerView.findViewById(R.id.bn_home_banner);
+//
+//        mBanner.setImageLoader(new MyImageLoader())  //设置图片加载器
+//                .setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE) //指定样式
+//                .setImages(imageList)   //设置图片url集合
+//                .setBannerTitles(titleList)     //设置title集合
+//                .setDelayTime(3000)     //设置轮播时间
+//                .start();   //最后才start
     }
 
     @Override

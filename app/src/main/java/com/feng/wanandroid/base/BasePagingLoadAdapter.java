@@ -22,8 +22,8 @@ import butterknife.ButterKnife;
  */
 public abstract class BasePagingLoadAdapter<T> extends RecyclerView.Adapter {
 
-    private static final int TYPE_ITEM = 1;      //普通item
-    private static final int TYPE_BOTTOM = 2;    //底部加载item
+    protected static final int TYPE_ITEM = 1;      //普通item
+    protected static final int TYPE_BOTTOM = 2;    //底部加载item
     private static final String TAG = "fzh";
 
     private boolean hasMore = true;     //判断是否有多页
@@ -80,7 +80,9 @@ public abstract class BasePagingLoadAdapter<T> extends RecyclerView.Adapter {
                 default:
                     break;
             }
-        } else {
+        }
+
+        if (TYPE_ITEM == getItemViewType(position)) {
             onBindItemViewHolder(holder, position);
         }
     }
