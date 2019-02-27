@@ -84,7 +84,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements ILogi
         Event<MainEvent> mainEvent = new Event<>(EventBusCode.Login2Main, new MainEvent(userName));
         EventBusUtil.sendEvent(mainEvent);
         //更新首页文章
-        Event<HomeEvent> homeEvent = new Event<>(EventBusCode.Login2Home, new HomeEvent(true));
+        Event<HomeEvent> homeEvent = new Event<>(EventBusCode.Login2Home, new HomeEvent(true, false));
         EventBusUtil.sendEvent(homeEvent);      //注意：如果一开始就是登陆界面比首页更早弹出，这里要改为StickEvent
 
         finish();

@@ -4,6 +4,7 @@
     package="com.feng.wanandroid">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".app.MyApplication"
@@ -14,20 +15,28 @@
         android:supportsRtl="true"
         android:theme="@style/ToolbarTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".view.activity.MainActivity"></activity>
-        <activity android:name=".view.activity.LoginActivity" />
-        <activity android:name=".view.activity.CollectionActivity" />
-        <activity android:name=".view.activity.ShowArticleActivity" />
+
+        <activity android:name=".view.activity.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name=".view.activity.LoginActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name=".view.activity.CollectionActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name=".view.activity.ShowArticleActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
         <activity
             android:name=".view.activity.EnterActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.activity.RegisterActivity"></activity>
+        <activity android:name=".view.activity.RegisterActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+
     </application>
 
 </manifest>

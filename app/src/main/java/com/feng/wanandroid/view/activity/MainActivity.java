@@ -1,15 +1,16 @@
 package com.feng.wanandroid.view.activity;
 
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,12 +23,9 @@ import com.feng.wanandroid.base.BaseFragment;
 import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.config.EventBusCode;
 import com.feng.wanandroid.contract.IMainContract;
-import com.feng.wanandroid.entity.bean.CollectBean;
 import com.feng.wanandroid.entity.eventbus.Event;
 import com.feng.wanandroid.entity.eventbus.HomeEvent;
 import com.feng.wanandroid.entity.eventbus.MainEvent;
-import com.feng.wanandroid.http.RetrofitHelper;
-import com.feng.wanandroid.http.api.AccountService;
 import com.feng.wanandroid.presenter.MainPresenter;
 import com.feng.wanandroid.utils.EventBusUtil;
 import com.feng.wanandroid.utils.Preferences;
@@ -41,15 +39,11 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindColor;
 import butterknife.BindView;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity<MainPresenter> implements View.OnClickListener, IMainContract.View {
 
@@ -63,6 +57,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
     NavigationView mMainNavigationView;
     @BindView(R.id.pb_main)
     ProgressBar mProgressBar;
+    @BindView(R.id.fab_main_floating_action_btn)
+    FloatingActionButton mBackToTopFab;
 
     ImageView mHeadImage;
     TextView mUserName;
@@ -284,7 +280,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
         mHeadImage.setImageResource(R.drawable.head_image_unlogin);
         mUserName.setText("登录");
         //更新首页文章
-        Event<HomeEvent> homeEvent = new Event<>(EventBusCode.Main2Home, new HomeEvent(true));
+        Event<HomeEvent> homeEvent = new Event<>(EventBusCode.Main2Home, new HomeEvent(true, false));
         EventBusUtil.sendEvent(homeEvent);
     }
 
@@ -340,6 +336,13 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
         setIsLogin(true);
         setLogoutItemVisible(true);     //显示退出登录菜单项
         setSwitchAccountItemVisible(true);     //显示切换账号菜单项
+    }
+
+    @OnClick(R.id.fab_main_floating_action_btn)
+    public void onViewClicked() {
+        //返回顶部
+        Event<HomeEvent> homeEvent = new Event<>(EventBusCode.Main2Home, new HomeEvent(false, true));
+        EventBusUtil.sendEvent(homeEvent);
     }
 
 }

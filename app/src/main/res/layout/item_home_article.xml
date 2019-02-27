@@ -10,7 +10,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        style="@style/CustomCheckboxTheme" />
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -69,8 +71,7 @@
                 android:maxLines="2"
                 android:text="一篇文章，教你学会Git一篇文章，教你学会Git"
                 android:textColor="@color/color_item_home_article_title"
-                android:textSize="18sp"
-                android:transitionName="@string/tran_toolbar" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tv_home_article_chapter"

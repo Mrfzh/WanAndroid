@@ -14,6 +14,7 @@ import com.feng.wanandroid.base.BasePagingLoadAdapter;
  */
 public class LoadMoreScrollListener extends RecyclerView.OnScrollListener {
 
+    private static final String TAG = "fzh";
     private BasePagingLoadAdapter mAdapter;
 
     public LoadMoreScrollListener(BasePagingLoadAdapter mAdapter) {
@@ -44,7 +45,9 @@ public class LoadMoreScrollListener extends RecyclerView.OnScrollListener {
             //时判断界面显示的最后item的position是否等于itemCount总数-1也就是最后一个item的position
             //如果相等则说明已经滑动到最后了
             if (lastPosition == recyclerView.getLayoutManager().getItemCount() - 1) {
+                Log.d(TAG, "onScrollStateChanged: lastposition = " + lastPosition);
                 mAdapter.LoadingMore();
+                Log.d(TAG, "onScrollStateChanged: run");
             }
 
         }

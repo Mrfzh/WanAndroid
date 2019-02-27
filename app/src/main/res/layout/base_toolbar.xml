@@ -8,4 +8,4 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     app:popupTheme="@style/MyPopupMenuTheme"
     android:elevation="4dp"
-    android:transitionName="@string/tran_toolbar"/>
+    app:layout_scrollFlags="scroll|enterAlways"/>

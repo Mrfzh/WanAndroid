@@ -2,7 +2,6 @@ package com.feng.wanandroid.view.activity;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
-import android.renderscript.Float4;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,6 +48,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
     private static final String TITLE_EDIT = "编辑";
     private static final String TITLE_CAL = "取消";
     private static final String TAG = "fzh";
+    private static int LOAD_TIME = 1;   //标记位
 
     @BindView(R.id.base_toolbar)
     Toolbar mToolbar;
@@ -66,8 +66,6 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
     TextView mMultiUnCollectTv;
     @BindView(R.id.rv_collection_bottom_bar)
     RelativeLayout mBottomBarRv;
-    @BindView(R.id.tv_collection_choose_all)
-    TextView mChooseAllTv;
 
     private ArticleAdapter mAdapter = null;
     private int currentPage = 0;
@@ -134,6 +132,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
         if (mHomePresenter != null) {
             mHomePresenter.detachView();
         }
+        LOAD_TIME = 1;
     }
 
     /**
@@ -154,7 +153,10 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
                 mArticleDataList = articleDataList;     //在articleDataList !=  null时才设置mList
                 //初始化adapter
                 initAdapter();
-                mCollectionRv.addOnScrollListener(new LoadMoreScrollListener(mAdapter));
+                if (LOAD_TIME == 1) {
+                    mCollectionRv.addOnScrollListener(new LoadMoreScrollListener(mAdapter));
+                    LOAD_TIME++;
+                }
                 mCollectionRv.setAdapter(mAdapter);
             } else {
                 if (articleDataList == null) {
@@ -171,6 +173,14 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
         mCheckList.clear(); //这里要使用clear而不是新new一个，不然会导致adapter和该活动持有的checklist不一样
         for (int i = 0; i < mArticleDataList.size(); i++) {
             mCheckList.add(false);
+        }
+
+        //更新全选CheckBox
+        if (mIdList.size() != mArticleDataList.size() && mChooseAllCb.isChecked()) {
+            mChooseAllCb.setChecked(false);     //取消全选
+        }
+        if (mIdList.size() == mArticleDataList.size() && !mChooseAllCb.isChecked()) {
+            mChooseAllCb.setChecked(true);     //设置全选
         }
 
     }
@@ -200,7 +210,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
     public void multiUnCollectSuccess(List<Integer> removeIndexList) {
         refresh();  //重新刷新界面
         //更新首页文章
-        Event<HomeEvent> event = new Event<>(EventBusCode.Collection2Home, new HomeEvent(true));
+        Event<HomeEvent> event = new Event<>(EventBusCode.Collection2Home, new HomeEvent(true, false));
         EventBusUtil.sendEvent(event);
 
         mProgressBar.setVisibility(View.GONE);
@@ -237,7 +247,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
             }
         }
         //更新首页文章
-        Event<HomeEvent> event = new Event<>(EventBusCode.Collection2Home, new HomeEvent(true));
+        Event<HomeEvent> event = new Event<>(EventBusCode.Collection2Home, new HomeEvent(true, false));
         EventBusUtil.sendEvent(event);
     }
 
@@ -363,6 +373,11 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
                     }
                 }
             }
+
+            @Override
+            public void longClickItem() {
+                edit(); //长按时进入编辑状态
+            }
         });
     }
 
@@ -380,14 +395,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
             case R.id.menu_collection_edit:
                 if (mAdapter != null) {
                     if (mMenu.getItem(0).getTitle().toString().equals(TITLE_EDIT)) {
-                        mMenu.getItem(0).setTitle(TITLE_CAL);
-                        //编辑操作
-                        mAdapter.setIsShowCheckBox(true);
-                        mAdapter.notifyDataSetChanged();
-
-                        mBottomBarRv.setVisibility(View.VISIBLE);   //显示底部栏
-
-                        mSwipeRefreshLayout.setEnabled(false);  //设置为不能刷新
+                        edit(); //编辑操作
                     } else {
                         mMenu.getItem(0).setTitle(TITLE_EDIT);
                         //取消操作
@@ -413,18 +421,9 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
         return true;
     }
 
-    @OnClick({R.id.cb_collection_choose_all, R.id.tv_collection_multi_uncollect, R.id.tv_collection_choose_all})
+    @OnClick({R.id.cb_collection_choose_all, R.id.tv_collection_multi_uncollect})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.tv_collection_choose_all:
-                if (mChooseAllCb.isChecked()) { //反选
-                    mChooseAllCb.setChecked(false);
-                    mAdapter.selectNull();
-                } else {    //全选
-                    mChooseAllCb.setChecked(true);
-                    mAdapter.selectAll();
-                }
-                break;
             case R.id.cb_collection_choose_all:
                 if (mChooseAllCb.isChecked()) {
                     mAdapter.selectAll();
@@ -434,26 +433,54 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
                 break;
             case R.id.tv_collection_multi_uncollect:
                 if (mMultiUnCollectTv.isSelected()) {
-                    //进行删除操作
-                    List<Integer> removeList = new ArrayList<>();
-                    for(int i = 0; i < mCheckList.size(); i++) {
-                        if (mCheckList.get(i)) {
-                            removeList.add(i);
-                        }
-                    }
-                    mPresenter.multiUnCollect(removeList, mIdList);
-                    //点击删除后其他控件相应的操作
-                    mMultiUnCollectTv.setSelected(false);
-                    mMultiUnCollectTv.setText("取消收藏");
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    mBottomBarRv.setVisibility(View.GONE);
-                    mMenu.getItem(0).setTitle(TITLE_EDIT);
-                    mSwipeRefreshLayout.setEnabled(true);
+                    TipDialog tipDialog = new TipDialog.Builder(CollectionActivity.this)
+                            .setContent("确定要取消这些收藏？")
+                            .setOnClickListener(new TipDialog.OnClickListener() {
+                                @Override
+                                public void clickEnsure() {
+                                    //进行删除操作
+                                    List<Integer> removeList = new ArrayList<>();
+                                    for(int i = 0; i < mCheckList.size(); i++) {
+                                        if (mCheckList.get(i)) {
+                                            removeList.add(i);
+                                        }
+                                    }
+                                    mPresenter.multiUnCollect(removeList, mIdList);
+                                    //点击删除后其他控件相应的操作
+                                    mMultiUnCollectTv.setSelected(false);
+                                    mMultiUnCollectTv.setText("取消收藏");
+                                    mProgressBar.setVisibility(View.VISIBLE);
+                                    mBottomBarRv.setVisibility(View.GONE);
+                                    mMenu.getItem(0).setTitle(TITLE_EDIT);
+                                    mSwipeRefreshLayout.setEnabled(true);
+                                }
+
+                                @Override
+                                public void clickCancel() {
+
+                                }
+                            })
+                            .build();
+                    tipDialog.show();
                 }
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 编辑操作
+     */
+    private void edit() {
+        mMenu.getItem(0).setTitle(TITLE_CAL);
+
+        mAdapter.setIsShowCheckBox(true);
+        mAdapter.notifyDataSetChanged();
+
+        mBottomBarRv.setVisibility(View.VISIBLE);   //显示底部栏
+
+        mSwipeRefreshLayout.setEnabled(false);  //设置为不能刷新
     }
 
 

@@ -1,13 +1,13 @@
 package com.feng.wanandroid.view.fragment;
 
-import android.app.ActivityOptions;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.feng.wanandroid.R;
 import com.feng.wanandroid.adapter.ArticleAdapter;
@@ -21,8 +21,12 @@ import com.feng.wanandroid.entity.eventbus.HomeEvent;
 import com.feng.wanandroid.entity.eventbus.ShowArticleEvent;
 import com.feng.wanandroid.presenter.HomePresenter;
 import com.feng.wanandroid.utils.EventBusUtil;
+import com.feng.wanandroid.utils.rv.WrapRecyclerView;
 import com.feng.wanandroid.view.activity.ShowArticleActivity;
 import com.feng.wanandroid.widget.LoadMoreScrollListener;
+import com.feng.wanandroid.widget.MyImageLoader;
+import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -41,8 +45,10 @@ import butterknife.BindView;
 public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeContract.View,
         BasePagingLoadAdapter.LoadMoreListener {
 
+//    private static final String TAG = "fzh";
     private static int currentPage = 0;
     private static final int REFRESH_TIME = 500;
+    private static int LOAD_TIME = 1;    //加载次数（第二次加载时不需要再addOnScrollListener，不然添加了多个监听器后会导致下拉加载出错）
 
     @BindView(R.id.rv_home_article_list)
     RecyclerView mArticleRv;
@@ -51,12 +57,21 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
     @BindView(R.id.srv_home_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
+    private Banner mBanner;
+    private View mBannerView;
+
     private ArticleAdapter mArticleAdapter;
     private List<ArticleData> mArticleDataList = new ArrayList<>();
 
     @Override
     protected void doInOnCreate() {
         mPresenter.getHomeArticle(currentPage++);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LOAD_TIME = 1;  //重置标记位
     }
 
     @Override
@@ -74,14 +89,35 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
             new Handler().postDelayed(this::refresh, REFRESH_TIME);
         });
 
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext()) {
-//            @Override
-//            public boolean canScrollVertically() {
-//                return false;   //禁止垂直滑动
-//            }
-//        };
-//        mArticleRv.setLayoutManager(linearLayoutManager);
         mArticleRv.setLayoutManager(new LinearLayoutManager(getContext()));
+
+
+        List<String> imageList = new ArrayList<>();
+        imageList.add("http://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png");
+        imageList.add("http://www.wanandroid.com/blogimgs/ab17e8f9-6b79-450b-8079-0f2287eb6f0f.png");
+        imageList.add("http://www.wanandroid.com/blogimgs/fb0ea461-e00a-482b-814f-4faca5761427.png");
+        imageList.add("http://www.wanandroid.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png");
+        imageList.add("http://www.wanandroid.com/blogimgs/00f83f1d-3c50-439f-b705-54a49fc3d90d.jpg");
+        imageList.add("http://www.wanandroid.com/blogimgs/90cf8c40-9489-4f9d-8936-02c9ebae31f0.png");
+        imageList.add("http://www.wanandroid.com/blogimgs/acc23063-1884-4925-bdf8-0b0364a7243e.png");
+        List<String> titleList = new ArrayList<>();
+        titleList.add("一起来做个App吧");
+        titleList.add("看看别人的面经，搞定面试~");
+        titleList.add("兄弟，要不要挑个项目学习下?");
+        titleList.add("我们新增了一个常用导航Tab~");
+        titleList.add("公众号文章列表强势上线");
+        titleList.add("JSON工具");
+        titleList.add("微信文章合集");
+
+        mBannerView = LayoutInflater.from(getContext()).inflate(R.layout.header_home_banner, null);
+        mBanner = mBannerView.findViewById(R.id.bn_home_banner);
+
+        mBanner.setImageLoader(new MyImageLoader())  //设置图片加载器
+                .setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE) //指定样式
+                .setImages(imageList)   //设置图片url集合
+                .setBannerTitles(titleList)     //设置title集合
+                .setDelayTime(3000)     //设置轮播时间
+                .start();   //最后才start
     }
 
     @Override
@@ -96,6 +132,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
      */
     @Override
     public void getHomeArticleSuccess(List<ArticleData> articleDataList) {
+
         mProgressBar.setVisibility(View.GONE);
         mSwipeRefreshLayout.setRefreshing(false);
 
@@ -106,7 +143,11 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
                 mArticleDataList = articleDataList;
                 initAdapter();
                 mArticleRv.setAdapter(mArticleAdapter);
-                mArticleRv.addOnScrollListener(new LoadMoreScrollListener(mArticleAdapter));
+                if (LOAD_TIME == 1) {
+                    mArticleRv.addOnScrollListener(new LoadMoreScrollListener(mArticleAdapter));
+                    //刷新后再加载不需要继续添加该监听器，不然会导致下拉加载出错
+                    LOAD_TIME++;
+                }
             }
         } else {
             if (articleDataList == null) {
@@ -116,6 +157,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
                 mArticleAdapter.updateList();
             }
         }
+
     }
 
     /**
@@ -209,6 +251,10 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
                     //刷新列表
                     refresh();
                 }
+                if (event.getData().isBackToTop()) {
+                    //返回顶部
+                    mArticleRv.smoothScrollToPosition(0);
+                }
                 break;
             default:
                 break;
@@ -220,6 +266,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
      */
     private void initAdapter() {
         mArticleAdapter = new ArticleAdapter(getContext(), mArticleDataList, this);
+
         mArticleAdapter.setClickListener(new ArticleAdapter.OnClickListener() {
             @Override
             public void clickCollect(boolean collect, int id, int position) {
@@ -240,6 +287,11 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
 
             @Override
             public void selectItemChanged(int num) {
+
+            }
+
+            @Override
+            public void longClickItem() {
 
             }
         });

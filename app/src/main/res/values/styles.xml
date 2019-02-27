@@ -12,7 +12,7 @@
     <style name="ToolbarTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/color_toolbar_state</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/color_tab_one</item>
         <item name="toolbarNavigationButtonStyle">@style/MyToolbarNavigationButtonStyle</item>
         <item name="actionOverflowMenuStyle">@style/ToolbarMenuPopStyle</item>
     </style>
@@ -53,6 +53,11 @@
         <item name="android:windowFrame">@null</item>   <!-- 没有边框 -->
         <item name="android:windowIsFloating">true</item>   <!-- 窗口浮动 -->
         <item name="android:windowContentOverlay">@null</item>  <!-- 没有阴影 -->
+    </style>
+
+    <!-- 自定义CheckBox样式 -->
+    <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/selector_check_box_bg</item>
     </style>
 
 </resources>

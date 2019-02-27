@@ -8,11 +8,13 @@ public class HomeEvent {
     private int position;
     private boolean isCollect;
     private boolean isRefresh;
+    private boolean isBackToTop;
 
-    private HomeEvent(int position, boolean isCollect, boolean isRefresh) {
+    private HomeEvent(int position, boolean isCollect, boolean isRefresh, boolean isBackToTop) {
         this.position = position;
         this.isCollect = isCollect;
         this.isRefresh = isRefresh;
+        this.isBackToTop = isBackToTop;
     }
 
     /**
@@ -22,16 +24,17 @@ public class HomeEvent {
      * @param isCollect 是否收藏
      */
     public HomeEvent(int position, boolean isCollect) {
-        this(position, isCollect, false);
+        this(position, isCollect, false, false);
     }
 
     /**
-     * 用于刷新adapter，不关心其他
+     * 用于刷新adapter和RV返回顶部
      *
      * @param isRefresh 是否刷新
+     * @param isBackToTop 是否返回顶部
      */
-    public HomeEvent(boolean isRefresh) {
-        this(-1, false, isRefresh);
+    public HomeEvent(boolean isRefresh, boolean isBackToTop) {
+        this(-1, false, isRefresh, isBackToTop);
     }
 
     public int getPosition() {
@@ -56,5 +59,13 @@ public class HomeEvent {
 
     public void setRefresh(boolean refresh) {
         isRefresh = refresh;
+    }
+
+    public boolean isBackToTop() {
+        return isBackToTop;
+    }
+
+    public void setBackToTop(boolean backToTop) {
+        isBackToTop = backToTop;
     }
 }

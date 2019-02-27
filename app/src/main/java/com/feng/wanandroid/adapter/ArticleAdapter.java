@@ -42,6 +42,7 @@ public class ArticleAdapter extends BasePagingLoadAdapter<ArticleData> {
         void clickCollect(boolean collect, int id, int position);    //点击了收藏item
         void clickItem(String link, String title, boolean isCollect, int id, int position);
         void selectItemChanged(int num);    //当选中的item数目改变时，回调该方法
+        void longClickItem();
     }
 
     public void setClickListener(OnClickListener clickListener) {
@@ -127,6 +128,21 @@ public class ArticleAdapter extends BasePagingLoadAdapter<ArticleData> {
                     list.get(position).getId());
         });
 
+
+        holder.itemView.setOnLongClickListener(v -> {
+
+            if (mCheckList != null) {   //分情况，checklist不为空时，才有长按进入多选编辑
+                ((HomeArticleViewHolder)holder).checkBox.setChecked(true);
+                doInCheckStateChanged(true, position, ((HomeArticleViewHolder)holder).checkBox.getTag(),
+                        list.get(position).getId());
+                isShowCheckBox = true;
+                notifyDataSetChanged();
+
+                clickListener.longClickItem();    //回调长按事件
+            }
+
+            return true;
+        });
 
     }
 

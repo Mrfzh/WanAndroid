@@ -1,5 +1,7 @@
 package com.feng.wanandroid.model;
 
+import android.util.Log;
+
 import com.feng.wanandroid.base.BaseModel;
 import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.contract.IHomeContract;
@@ -21,6 +23,7 @@ import io.reactivex.disposables.Disposable;
  * Created on 2018/12/11
  */
 public class HomeModel extends BaseModel implements IHomeContract.Model {
+    private static final String TAG = "fzh";
     private IHomeContract.Presenter mPresenter;
     private HomeService mHomeService;
     private AccountService mAccountService;

@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">WanAndroid</string>
-
-    <string name="tran_toolbar">tran_toolbar</string>
+    <string name="main_fab_behavior">com.feng.wanandroid.widget.MainFABBehavior</string>
 </resources>

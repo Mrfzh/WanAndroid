@@ -95,7 +95,7 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
         Event<MainEvent> mainEvent = new Event<>(EventBusCode.Register2Main, new MainEvent(userName));
         EventBusUtil.sendEvent(mainEvent);
         //更新首页文章
-        Event<HomeEvent> homeEvent = new Event<>(EventBusCode.Register2Home, new HomeEvent(true));
+        Event<HomeEvent> homeEvent = new Event<>(EventBusCode.Register2Home, new HomeEvent(true, false));
         EventBusUtil.sendEvent(homeEvent);
 
         finish();
