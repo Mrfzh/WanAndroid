@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.feng.wanandroid.R;
-import com.feng.wanandroid.adapter.ArticleAdapter;
+import com.feng.wanandroid.adapter.CollectedArticleAdapter;
 import com.feng.wanandroid.base.BaseActivity;
 import com.feng.wanandroid.base.BasePagingLoadAdapter;
 import com.feng.wanandroid.config.EventBusCode;
@@ -67,7 +67,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
     @BindView(R.id.rv_collection_bottom_bar)
     RelativeLayout mBottomBarRv;
 
-    private ArticleAdapter mAdapter = null;
+    private CollectedArticleAdapter mAdapter = null;
     private int currentPage = 0;
     private List<ArticleData> mArticleDataList = new ArrayList<>();
     private HomePresenter mHomePresenter;
@@ -324,9 +324,9 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
         if (mIdList.size() != 0) {
             mIdList.clear();
         }
-        mAdapter = new ArticleAdapter(this, mArticleDataList, this, mCheckList, mIdList);
+        mAdapter = new CollectedArticleAdapter(this, mArticleDataList, this, mCheckList, mIdList);
 
-        mAdapter.setClickListener(new ArticleAdapter.OnClickListener() {
+        mAdapter.setClickListener(new CollectedArticleAdapter.OnClickListener() {
             @Override
             public void clickCollect(boolean collect, int id, int position) {
                 if (collect) {
