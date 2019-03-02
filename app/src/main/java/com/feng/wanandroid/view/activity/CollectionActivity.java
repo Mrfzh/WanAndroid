@@ -262,6 +262,16 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
     }
 
     @Override
+    public void getBannerInfoSuccess(List<String> imageUrlList, List<String> titleList, List<String> urlList) {
+
+    }
+
+    @Override
+    public void getBannerInfoError(String errorMsg) {
+
+    }
+
+    @Override
     public void loadMore() {
         mPresenter.getCollectList(currentPage++);
     }

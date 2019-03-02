@@ -1,5 +1,6 @@
 package com.feng.wanandroid.http.api;
 
+import com.feng.wanandroid.entity.bean.BannerBean;
 import com.feng.wanandroid.entity.bean.HomeArticleBean;
 
 import io.reactivex.Observable;
@@ -20,4 +21,12 @@ public interface HomeService {
      */
     @GET("article/list/{page}/json")
     Observable<HomeArticleBean> getHomeArticle(@Path("page") int pageIndex);
+
+    /**
+     * 获取首页banner
+     *
+     * @return
+     */
+    @GET("banner/json")
+    Observable<BannerBean> getBannerInfo();
 }

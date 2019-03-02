@@ -60,6 +60,20 @@ public class HomePresenter extends BasePresenter<IHomeContract.View> implements 
         }
     }
 
+    @Override
+    public void getBannerInfoSuccess(List<String> imageUrlList, List<String> titleList, List<String> urlList) {
+        if (isAttachView()) {
+            getMvpView().getBannerInfoSuccess(imageUrlList, titleList, urlList);
+        }
+    }
+
+    @Override
+    public void getBannerInfoError(String errorMsg) {
+        if (isAttachView()) {
+            getMvpView().getHomeArticleError(errorMsg);
+        }
+    }
+
 
     @Override
     public void getHomeArticle(int pageIndex) {
@@ -74,5 +88,10 @@ public class HomePresenter extends BasePresenter<IHomeContract.View> implements 
     @Override
     public void unCollect(int id, int position) {
         mModel.unCollect(id, position);
+    }
+
+    @Override
+    public void getBannerInfo() {
+        mModel.getBannerInfo();
     }
 }

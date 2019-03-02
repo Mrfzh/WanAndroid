@@ -40,6 +40,7 @@ public class ShowArticleActivity extends BaseActivity<HomePresenter> implements 
     private int mPosition;
     private int mId;
     private boolean mIsFromCollect;     //是否从收藏页面跳转来
+    private boolean mIsHideCollect = false;     //是否隐藏收藏菜单
 
     private Menu mMenu;
 
@@ -63,9 +64,17 @@ public class ShowArticleActivity extends BaseActivity<HomePresenter> implements 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void initView() {
-        mShowArticleWebView.getSettings().setJavaScriptEnabled(true);
-
         mProgressBar = findViewById(R.id.pb_show_article_progress_bar);
+
+        mShowArticleWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);//设置js可以直接打开窗口，如window.open()，默认为false
+        mShowArticleWebView.getSettings().setJavaScriptEnabled(true);//是否允许执行js，默认为false。设置true时，会提醒可能造成XSS漏洞
+        mShowArticleWebView.getSettings().setSupportZoom(true);//是否可以缩放，默认true
+        mShowArticleWebView.getSettings().setBuiltInZoomControls(true);//是否显示缩放按钮，默认false
+        mShowArticleWebView.getSettings().setDisplayZoomControls(false);//隐藏缩放工具
+        mShowArticleWebView.getSettings().setUseWideViewPort(true);//设置此属性，可任意比例缩放。大视图模式
+        mShowArticleWebView.getSettings().setLoadWithOverviewMode(true);//和setUseWideViewPort(true)一起解决网页自适应问题
+        mShowArticleWebView.getSettings().setAppCacheEnabled(true);//是否使用缓存
+        mShowArticleWebView.getSettings().setDomStorageEnabled(true);//DOM Storage
         WebViewClient webViewClient = new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -122,11 +131,15 @@ public class ShowArticleActivity extends BaseActivity<HomePresenter> implements 
     public boolean onCreateOptionsMenu(Menu menu) {
         mMenu = menu;
         getMenuInflater().inflate(R.menu.menu_show_article, menu);   //设置菜单
-        //设置收藏还是取消收藏
-        if (mIsCollect) {
-            setMenuTitle(menu, 0, "取消收藏");
+        if (mIsHideCollect) {   //如果要隐藏收藏菜单项
+            menu.getItem(0).setVisible(false);
         } else {
-            setMenuTitle(menu, 0, "收藏");
+            //设置收藏还是取消收藏
+            if (mIsCollect) {
+                setMenuTitle(menu, 0, "取消收藏");
+            } else {
+                setMenuTitle(menu, 0, "收藏");
+            }
         }
 
         return true;
@@ -231,6 +244,16 @@ public class ShowArticleActivity extends BaseActivity<HomePresenter> implements 
     }
 
     @Override
+    public void getBannerInfoSuccess(List<String> imageUrlList, List<String> titleList, List<String> urlList) {
+
+    }
+
+    @Override
+    public void getBannerInfoError(String errorMsg) {
+
+    }
+
+    @Override
     protected boolean isRegisterEventBus() {
         return true;
     }
@@ -246,7 +269,12 @@ public class ShowArticleActivity extends BaseActivity<HomePresenter> implements 
                 mId = event.getData().getId();
                 mPosition = event.getData().getPosition();
                 mIsFromCollect = event.getData().isFromCollect();
+                mIsHideCollect = false;
                 break;
+            case EventBusCode.HomeBanner2ShowArticle:
+                mLink = event.getData().getLink();
+                mTitle = event.getData().getTitle();
+                mIsHideCollect = true;
             default:
                 break;
         }

@@ -5,6 +5,7 @@ import android.util.Log;
 import com.feng.wanandroid.base.BaseModel;
 import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.contract.IHomeContract;
+import com.feng.wanandroid.entity.bean.BannerBean;
 import com.feng.wanandroid.entity.bean.CollectBean;
 import com.feng.wanandroid.entity.bean.HomeArticleBean;
 import com.feng.wanandroid.entity.data.ArticleData;
@@ -129,6 +130,43 @@ public class HomeModel extends BaseModel implements IHomeContract.Model {
             @Override
             public void onError(Throwable e) {
                 mPresenter.unCollectError(Constant.ERROR_MSG);
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+
+    @Override
+    public void getBannerInfo() {
+        execute(mHomeService.getBannerInfo(), new Observer<BannerBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(BannerBean bannerBean) {
+                if (bannerBean.getErrorMsg().equals("")) {
+                    List<String> imageUrlList = new ArrayList<>();
+                    List<String> titleList = new ArrayList<>();
+                    List<String> urlList = new ArrayList<>();
+                    for (int i = 0; i < bannerBean.getData().size(); i++) {
+                        imageUrlList.add(bannerBean.getData().get(i).getImagePath());
+                        titleList.add(bannerBean.getData().get(i).getTitle());
+                        urlList.add(bannerBean.getData().get(i).getUrl());
+                    }
+                    mPresenter.getBannerInfoSuccess(imageUrlList, titleList, urlList);
+                } else {
+                    mPresenter.getBannerInfoError(bannerBean.getErrorMsg());
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mPresenter.getBannerInfoError(Constant.ERROR_MSG);
             }
 
             @Override

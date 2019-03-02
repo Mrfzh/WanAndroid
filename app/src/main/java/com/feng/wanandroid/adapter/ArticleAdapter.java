@@ -18,6 +18,7 @@ import com.feng.wanandroid.entity.data.ArticleData;
 import com.feng.wanandroid.widget.MyImageLoader;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
+import com.youth.banner.listener.OnBannerListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ public class ArticleAdapter extends BasePagingLoadAdapter<ArticleData> {
     private static final int TYPE_HEADER = 3;      //header
 
     private OnClickListener clickListener;
+    private BannerInfoListener bannerInfoListener;
 
     private static final String TAG = "fzh";
 
@@ -41,10 +43,20 @@ public class ArticleAdapter extends BasePagingLoadAdapter<ArticleData> {
 //        void clickChapter();      //点击了栏目（以后再实现）
         void clickCollect(boolean collect, int id, int position);    //点击了收藏item
         void clickItem(String link, String title, boolean isCollect, int id, int position);
+        void clickBannerItem(int position); //点击Banner
+    }
+
+    public interface BannerInfoListener {
+        List<String> getImageUrlList();
+        List<String> getTitleList();
     }
 
     public void setClickListener(OnClickListener clickListener) {
         this.clickListener = clickListener;
+    }
+
+    public void setBannerInfoListener(BannerInfoListener bannerInfoListener) {
+        this.bannerInfoListener = bannerInfoListener;
     }
 
     public ArticleAdapter(Context context, List<ArticleData> list, LoadMoreListener loadMoreListener) {
@@ -149,30 +161,19 @@ public class ArticleAdapter extends BasePagingLoadAdapter<ArticleData> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
         if (TYPE_HEADER == getItemViewType(position)) {
-            List<String> imageList = new ArrayList<>();
-            imageList.add("http://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png");
-            imageList.add("http://www.wanandroid.com/blogimgs/ab17e8f9-6b79-450b-8079-0f2287eb6f0f.png");
-            imageList.add("http://www.wanandroid.com/blogimgs/fb0ea461-e00a-482b-814f-4faca5761427.png");
-            imageList.add("http://www.wanandroid.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png");
-            imageList.add("http://www.wanandroid.com/blogimgs/00f83f1d-3c50-439f-b705-54a49fc3d90d.jpg");
-            imageList.add("http://www.wanandroid.com/blogimgs/90cf8c40-9489-4f9d-8936-02c9ebae31f0.png");
-            imageList.add("http://www.wanandroid.com/blogimgs/acc23063-1884-4925-bdf8-0b0364a7243e.png");
-            List<String> titleList = new ArrayList<>();
-            titleList.add("一起来做个App吧");
-            titleList.add("看看别人的面经，搞定面试~");
-            titleList.add("兄弟，要不要挑个项目学习下?");
-            titleList.add("我们新增了一个常用导航Tab~");
-            titleList.add("公众号文章列表强势上线");
-            titleList.add("JSON工具");
-            titleList.add("微信文章合集");
-
             //header
             ((HeaderViewHolder)holder).homeBanner.setImageLoader(new MyImageLoader())  //设置图片加载器
                     .setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE) //指定样式
-                    .setImages(imageList)   //设置图片url集合
-                    .setBannerTitles(titleList)     //设置title集合
+                    .setImages(bannerInfoListener.getImageUrlList())   //设置图片url集合
+                    .setBannerTitles(bannerInfoListener.getTitleList())     //设置title集合
                     .setDelayTime(3000)     //设置轮播时间
                     .start();   //最后才start
+            ((HeaderViewHolder)holder).homeBanner.setOnBannerListener(new OnBannerListener() {
+                @Override
+                public void OnBannerClick(int position) {
+                    clickListener.clickBannerItem(position);
+                }
+            });
         }
     }
 }

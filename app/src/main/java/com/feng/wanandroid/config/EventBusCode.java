@@ -15,4 +15,5 @@ public class EventBusCode {
     public static final int Register2Main = 7;
     public static final int Login2Main = 8;
     public static final int Main2Home = 9;
+    public static final int HomeBanner2ShowArticle = 10;
 }

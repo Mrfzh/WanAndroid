@@ -4,8 +4,6 @@ import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -21,12 +19,8 @@ import com.feng.wanandroid.entity.eventbus.HomeEvent;
 import com.feng.wanandroid.entity.eventbus.ShowArticleEvent;
 import com.feng.wanandroid.presenter.HomePresenter;
 import com.feng.wanandroid.utils.EventBusUtil;
-import com.feng.wanandroid.utils.rv.WrapRecyclerView;
 import com.feng.wanandroid.view.activity.ShowArticleActivity;
 import com.feng.wanandroid.widget.LoadMoreScrollListener;
-import com.feng.wanandroid.widget.MyImageLoader;
-import com.youth.banner.Banner;
-import com.youth.banner.BannerConfig;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -57,15 +51,16 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
     @BindView(R.id.srv_home_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
-//    private Banner mBanner;
-//    private View mBannerView;
-
     private ArticleAdapter mArticleAdapter;
     private List<ArticleData> mArticleDataList = new ArrayList<>();
 
+    private List<String> mImageUrlList = new ArrayList<>();
+    private List<String> mTitleList = new ArrayList<>();
+    private List<String> mUrlList = new ArrayList<>();
+
     @Override
     protected void doInOnCreate() {
-        mPresenter.getHomeArticle(currentPage++);
+        mPresenter.getBannerInfo();
     }
 
     @Override
@@ -90,34 +85,6 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
         });
 
         mArticleRv.setLayoutManager(new LinearLayoutManager(getContext()));
-
-//
-//        List<String> imageList = new ArrayList<>();
-//        imageList.add("http://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png");
-//        imageList.add("http://www.wanandroid.com/blogimgs/ab17e8f9-6b79-450b-8079-0f2287eb6f0f.png");
-//        imageList.add("http://www.wanandroid.com/blogimgs/fb0ea461-e00a-482b-814f-4faca5761427.png");
-//        imageList.add("http://www.wanandroid.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png");
-//        imageList.add("http://www.wanandroid.com/blogimgs/00f83f1d-3c50-439f-b705-54a49fc3d90d.jpg");
-//        imageList.add("http://www.wanandroid.com/blogimgs/90cf8c40-9489-4f9d-8936-02c9ebae31f0.png");
-//        imageList.add("http://www.wanandroid.com/blogimgs/acc23063-1884-4925-bdf8-0b0364a7243e.png");
-//        List<String> titleList = new ArrayList<>();
-//        titleList.add("一起来做个App吧");
-//        titleList.add("看看别人的面经，搞定面试~");
-//        titleList.add("兄弟，要不要挑个项目学习下?");
-//        titleList.add("我们新增了一个常用导航Tab~");
-//        titleList.add("公众号文章列表强势上线");
-//        titleList.add("JSON工具");
-//        titleList.add("微信文章合集");
-
-//        mBannerView = LayoutInflater.from(getContext()).inflate(R.layout.header_home_banner, null);
-//        mBanner = mBannerView.findViewById(R.id.bn_home_banner);
-//
-//        mBanner.setImageLoader(new MyImageLoader())  //设置图片加载器
-//                .setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE) //指定样式
-//                .setImages(imageList)   //设置图片url集合
-//                .setBannerTitles(titleList)     //设置title集合
-//                .setDelayTime(3000)     //设置轮播时间
-//                .start();   //最后才start
     }
 
     @Override
@@ -220,6 +187,30 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
         showShortToast(errorMsg);
     }
 
+    /**
+     * 获取banner信息成功
+     *
+     * @param imageUrlList
+     * @param titleList
+     */
+    @Override
+    public void getBannerInfoSuccess(List<String> imageUrlList, List<String> titleList, List<String> urlList) {
+        mImageUrlList = imageUrlList;
+        mTitleList = titleList;
+        mUrlList = urlList;
+        mPresenter.getHomeArticle(currentPage++);
+    }
+
+    /**
+     * 获取banner信息失败
+     *
+     * @param errorMsg
+     */
+    @Override
+    public void getBannerInfoError(String errorMsg) {
+        showShortToast(errorMsg);
+    }
+
     @Override
     public void loadMore() {
         mPresenter.getHomeArticle(currentPage++);
@@ -283,6 +274,27 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
                         title, isCollect, id, position, false));
                 EventBusUtil.sendStickyEvent(event);
                 jump2Activity(ShowArticleActivity.class);
+            }
+
+            @Override
+            public void clickBannerItem(int position) {
+                //活动跳转，跳转到显示文章活动
+                Event<ShowArticleEvent> event = new Event<>(EventBusCode.HomeBanner2ShowArticle, new ShowArticleEvent(
+                        mUrlList.get(position), mTitleList.get(position)));
+                EventBusUtil.sendStickyEvent(event);
+                jump2Activity(ShowArticleActivity.class);
+            }
+        });
+
+        mArticleAdapter.setBannerInfoListener(new ArticleAdapter.BannerInfoListener() {
+            @Override
+            public List<String> getImageUrlList() {
+                return mImageUrlList;
+            }
+
+            @Override
+            public List<String> getTitleList() {
+                return mTitleList;
             }
         });
     }
