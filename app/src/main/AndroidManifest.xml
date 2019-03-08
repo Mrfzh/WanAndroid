@@ -36,6 +36,8 @@
         </activity>
         <activity android:name=".view.activity.RegisterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name=".view.activity.TreeDetailedActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
 
     </application>
 

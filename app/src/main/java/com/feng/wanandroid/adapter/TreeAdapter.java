@@ -28,6 +28,11 @@ public class TreeAdapter extends RecyclerView.Adapter {
     private OnClickListener onClickListener;
 
     public interface OnClickListener {
+        /**
+         * @param name 一级分类名
+         * @param childNames    二级分类名
+         * @param ids   二级分类id
+         */
         void clickItem(String name, List<String> childNames, List<Integer> ids);
     }
 

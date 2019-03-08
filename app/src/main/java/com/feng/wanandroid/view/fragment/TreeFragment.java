@@ -10,9 +10,14 @@ import android.widget.ProgressBar;
 import com.feng.wanandroid.R;
 import com.feng.wanandroid.adapter.TreeAdapter;
 import com.feng.wanandroid.base.BaseFragment;
+import com.feng.wanandroid.config.EventBusCode;
 import com.feng.wanandroid.contract.ITreeContract;
 import com.feng.wanandroid.entity.data.TreeData;
+import com.feng.wanandroid.entity.eventbus.Event;
+import com.feng.wanandroid.entity.eventbus.TreeDetailedEvent;
 import com.feng.wanandroid.presenter.TreePresenter;
+import com.feng.wanandroid.utils.EventBusUtil;
+import com.feng.wanandroid.view.activity.TreeDetailedActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +40,7 @@ public class TreeFragment extends BaseFragment<TreePresenter> implements ITreeCo
     ProgressBar mProgressBar;
 
     private TreeAdapter mTreeAdapter = null;
-    private List<TreeData> mTreeDataList = new ArrayList<>();
+//    private List<TreeData> mTreeDataList = new ArrayList<>();
 
     @Override
     protected void doInOnCreate() {
@@ -70,14 +75,17 @@ public class TreeFragment extends BaseFragment<TreePresenter> implements ITreeCo
         mProgressBar.setVisibility(View.GONE);
         mRefresh.setRefreshing(false);
 
-        mTreeDataList = treeDataList;
         mTreeAdapter = null;
         //初始化adapter
         mTreeAdapter = new TreeAdapter(getContext(), treeDataList);
         mTreeAdapter.setOnClickListener(new TreeAdapter.OnClickListener() {
             @Override
             public void clickItem(String name, List<String> childNames, List<Integer> ids) {
-                
+                //跳转到具体的体系目录
+                Event<TreeDetailedEvent> event = new Event<>(EventBusCode.Tree2TreeDetailed,
+                        new TreeDetailedEvent(name , childNames, ids));
+                EventBusUtil.sendStickyEvent(event);
+                jump2Activity(TreeDetailedActivity.class);
             }
         });
         //配置RV
