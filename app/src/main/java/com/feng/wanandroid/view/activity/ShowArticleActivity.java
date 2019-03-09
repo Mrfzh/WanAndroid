@@ -263,6 +263,7 @@ public class ShowArticleActivity extends BaseActivity<HomePresenter> implements 
         switch (event.getCode()) {
             case EventBusCode.Home2ShowArticle:
             case EventBusCode.Collection2ShowArticle:
+            case EventBusCode.TreeArticle2ShowArticle:
                 mLink = event.getData().getLink();
                 mTitle = event.getData().getTitle();
                 mIsCollect = event.getData().isCollect();

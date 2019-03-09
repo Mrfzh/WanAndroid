@@ -17,4 +17,5 @@ public class EventBusCode {
     public static final int Main2Home = 9;
     public static final int HomeBanner2ShowArticle = 10;
     public static final int Tree2TreeDetailed = 11;
+    public static final int TreeArticle2ShowArticle = 12;
 }

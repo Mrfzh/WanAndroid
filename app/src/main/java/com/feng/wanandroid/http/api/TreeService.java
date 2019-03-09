@@ -1,9 +1,12 @@
 package com.feng.wanandroid.http.api;
 
+import com.feng.wanandroid.entity.bean.TreeArticleBean;
 import com.feng.wanandroid.entity.bean.TreeBean;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * @author Feng Zhaohao
@@ -17,4 +20,14 @@ public interface TreeService {
      */
     @GET("tree/json")
     Observable<TreeBean> getTree();
+
+    /**
+     * 获取体系文章
+     *
+     * @param page 页码
+     * @param id 二级目录id
+     * @return
+     */
+    @GET("article/list/{page}/json?")
+    Observable<TreeArticleBean> getTreeArticle(@Path("page") int page, @Query("cid") int id);
 }

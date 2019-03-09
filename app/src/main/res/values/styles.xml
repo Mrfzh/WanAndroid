@@ -60,4 +60,9 @@
         <item name="android:button">@drawable/selector_check_box_bg</item>
     </style>
 
+    <!-- 自定义TabLayout字体样式 -->
+    <style name="CustomTabLayoutTextStyle" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+    </style>
+
 </resources>

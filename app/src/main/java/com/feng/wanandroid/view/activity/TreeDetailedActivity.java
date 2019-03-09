@@ -3,17 +3,21 @@ package com.feng.wanandroid.view.activity;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.feng.wanandroid.R;
+import com.feng.wanandroid.adapter.TreeArticleCatalogFragmentStatePagerAdapter;
 import com.feng.wanandroid.base.BaseActivity;
 import com.feng.wanandroid.base.BasePresenter;
 import com.feng.wanandroid.config.EventBusCode;
 import com.feng.wanandroid.entity.eventbus.Event;
 import com.feng.wanandroid.entity.eventbus.TreeDetailedEvent;
+import com.feng.wanandroid.view.fragment.TreeArticleCatalogFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,9 +28,12 @@ import butterknife.BindView;
  */
 public class TreeDetailedActivity extends BaseActivity {
 
+//    private static final String TAG = "fzh";
     private String mFirstLevelCatalogName;
     private List<String> mSecondLevelCatalogNames;
     private List<Integer> mSecondLevelCatalogIds;
+    private List<TreeArticleCatalogFragment> mTreeArticleCatalogFragments
+            = new ArrayList<>();
 
     @BindView(R.id.base_toolbar)
     Toolbar mToolbar;
@@ -47,7 +54,9 @@ public class TreeDetailedActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
+        for (int i = 0; i < mSecondLevelCatalogIds.size(); i++) {
+            mTreeArticleCatalogFragments.add(TreeArticleCatalogFragment.newInstance(mSecondLevelCatalogIds.get(i)));
+        }
     }
 
     @Override
@@ -62,7 +71,11 @@ public class TreeDetailedActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        mArticleCatalogViewPager.setAdapter(new TreeArticleCatalogFragmentStatePagerAdapter(getSupportFragmentManager(),
+                mSecondLevelCatalogNames, mTreeArticleCatalogFragments));
+        mArticleCatalogViewPager.setOffscreenPageLimit(mSecondLevelCatalogIds.size());
 
+        mSecondLevelDirectoryTabLayout.setupWithViewPager(mArticleCatalogViewPager);
     }
 
     @Override
