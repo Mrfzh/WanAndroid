@@ -29,7 +29,7 @@ import com.feng.wanandroid.entity.eventbus.ShowArticleEvent;
 import com.feng.wanandroid.presenter.CollectionPresenter;
 import com.feng.wanandroid.presenter.HomePresenter;
 import com.feng.wanandroid.utils.EventBusUtil;
-import com.feng.wanandroid.widget.LoadMoreScrollListener;
+import com.feng.wanandroid.widget.custom.LoadMoreScrollListener;
 import com.feng.wanandroid.widget.dialog.TipDialog;
 
 import org.greenrobot.eventbus.Subscribe;

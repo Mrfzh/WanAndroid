@@ -20,7 +20,7 @@ import com.feng.wanandroid.entity.eventbus.ShowArticleEvent;
 import com.feng.wanandroid.presenter.HomePresenter;
 import com.feng.wanandroid.utils.EventBusUtil;
 import com.feng.wanandroid.view.activity.ShowArticleActivity;
-import com.feng.wanandroid.widget.LoadMoreScrollListener;
+import com.feng.wanandroid.widget.custom.LoadMoreScrollListener;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

@@ -3,6 +3,7 @@ package com.feng.wanandroid.view.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.feng.wanandroid.R;
 import com.feng.wanandroid.adapter.TreeArticleAdapter;
@@ -16,7 +17,7 @@ import com.feng.wanandroid.entity.eventbus.ShowArticleEvent;
 import com.feng.wanandroid.presenter.TreeArticleCatalogPresenter;
 import com.feng.wanandroid.utils.EventBusUtil;
 import com.feng.wanandroid.view.activity.ShowArticleActivity;
-import com.feng.wanandroid.widget.LoadMoreScrollListener;
+import com.feng.wanandroid.widget.custom.LoadMoreScrollListener;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,7 +31,9 @@ import butterknife.BindView;
 public class TreeArticleCatalogFragment extends BaseFragment<TreeArticleCatalogPresenter>
         implements ITreeArticleCatalogContract.View, BasePagingLoadAdapter.LoadMoreListener {
 
+    public static boolean IS_GET_INFO = false;  //标记位：各fragment是否都获取到信息
     private static final String CID = "secondLevelCatalogId";
+//    private static final String TAG = "fzh";
     private int currentPage = 0;   //当前加载的页码
     private int LOAD_TIME = 1;    //加载次数（第二次加载时不需要再addOnScrollListener，不然添加了多个监听器后会导致下拉加载出错）
 
@@ -65,6 +68,13 @@ public class TreeArticleCatalogFragment extends BaseFragment<TreeArticleCatalogP
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        IS_GET_INFO = false;    //重置标记位
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.fragment_tree_article_catalog;
     }
@@ -81,6 +91,7 @@ public class TreeArticleCatalogFragment extends BaseFragment<TreeArticleCatalogP
 
     @Override
     public void getArticleInfoSuccess(List<ArticleData> articleDataList) {
+        IS_GET_INFO = true;
 
         if (mTreeArticleAdapter == null) {
             if (articleDataList == null) {
@@ -108,6 +119,8 @@ public class TreeArticleCatalogFragment extends BaseFragment<TreeArticleCatalogP
 
     @Override
     public void getArticleInfoError(String errorMsg) {
+        IS_GET_INFO = false;
+
         if (mTreeArticleAdapter == null) {
             showShortToast(errorMsg);
         } else {

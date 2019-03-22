@@ -1,4 +1,4 @@
-package com.feng.wanandroid.widget;
+package com.feng.wanandroid.widget.custom;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
