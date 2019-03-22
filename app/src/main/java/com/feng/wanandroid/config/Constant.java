@@ -22,7 +22,7 @@ public class Constant {
     public static final int[] STATE_BAR_COLOR = {R.color.color_state_bar_one, R.color.color_state_bar_one,
             R.color.color_state_bar_one, R.color.color_state_bar_one};   //各个tab对应的状态栏的颜色
 
-    public static final String BASE_URL = "http://www.wanandroid.com/";
+    public static final String BASE_URL = "https://www.wanandroid.com/";
 
     //SP相关
     public static final String COOKIES_SHARE_PRE = "cookies_share_pre";
