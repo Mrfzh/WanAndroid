@@ -1,10 +1,14 @@
 package com.feng.wanandroid.entity.data;
 
+import java.io.Serializable;
+
 /**
  * @author Feng Zhaohao
  * Created on 2018/12/11
  */
-public class ArticleData {
+public class ArticleData implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String author;
     private String chapterName;

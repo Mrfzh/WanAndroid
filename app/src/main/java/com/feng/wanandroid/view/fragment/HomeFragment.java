@@ -11,6 +11,7 @@ import com.feng.wanandroid.R;
 import com.feng.wanandroid.adapter.ArticleAdapter;
 import com.feng.wanandroid.base.BaseFragment;
 import com.feng.wanandroid.base.BasePagingLoadAdapter;
+import com.feng.wanandroid.cache.ACache;
 import com.feng.wanandroid.config.EventBusCode;
 import com.feng.wanandroid.contract.IHomeContract;
 import com.feng.wanandroid.entity.data.ArticleData;
@@ -25,6 +26,7 @@ import com.feng.wanandroid.widget.custom.LoadMoreScrollListener;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +45,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
     private static int currentPage = 0;
     private static final int REFRESH_TIME = 500;
     private static int LOAD_TIME = 1;    //加载次数（第二次加载时不需要再addOnScrollListener，不然添加了多个监听器后会导致下拉加载出错）
+    private static final String KEY_SAVE = "homeSave";
 
     @BindView(R.id.rv_home_article_list)
     RecyclerView mArticleRv;
@@ -58,9 +61,13 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
     private List<String> mTitleList = new ArrayList<>();
     private List<String> mUrlList = new ArrayList<>();
 
+    private ACache mCache;
+
     @Override
     protected void doInOnCreate() {
         mPresenter.getBannerInfo();
+
+        mCache = ACache.get(getContext());
     }
 
     @Override
@@ -115,6 +122,9 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
                     //刷新后再加载不需要继续添加该监听器，不然会导致下拉加载出错
                     LOAD_TIME++;
                 }
+
+                //缓存文章数据
+                mCache.put(KEY_SAVE, (Serializable) mArticleDataList);
             }
         } else {
             if (articleDataList == null) {
@@ -122,6 +132,9 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
             } else {
                 mArticleDataList = articleDataList;
                 mArticleAdapter.updateList();
+
+                //缓存文章数据
+                mCache.put(KEY_SAVE, (Serializable) mArticleDataList);
             }
         }
 
@@ -138,9 +151,16 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
         mSwipeRefreshLayout.setRefreshing(false);
         if (mArticleAdapter == null) {
             showShortToast(errorMsg);
+
+            //读取缓存
+            mArticleDataList = (List<ArticleData>) mCache.getAsObject(KEY_SAVE);
+            initAdapter();
+            mArticleRv.setAdapter(mArticleAdapter);
         } else {
             mArticleAdapter.setErrorStatus();
         }
+
+
     }
 
     /**
