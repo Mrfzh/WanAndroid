@@ -193,7 +193,8 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
      */
     @Override
     public void unCollectSuccess(int position) {
-        mArticleDataList.get(position).setCollect(false);
+        int newPos = position - 1;
+        mArticleDataList.get(newPos).setCollect(false);
         mArticleAdapter.notifyDataSetChanged();
         showShortToast("取消收藏");
     }

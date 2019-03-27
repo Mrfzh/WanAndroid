@@ -124,8 +124,10 @@ public class TreeFragment extends BaseFragment<TreePresenter> implements ITreeCo
         if (mTreeAdapter == null) {
             //读取缓存
             mTreeDataList = (List<TreeData>) mCache.getAsObject(KEY_SAVE_TREE_DATA);
-            //初始化adapter
-            initAdapter();
+            if (mTreeDataList != null) {
+                //初始化adapter
+                initAdapter();
+            }
         }
         //配置RV
         mRecyclerView.setAdapter(mTreeAdapter);
