@@ -170,7 +170,8 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
      */
     @Override
     public void collectSuccess(int position) {
-        mArticleDataList.get(position).setCollect(true);    //更新集合信息
+        int newPos = position - 1;
+        mArticleDataList.get(newPos).setCollect(true);    //更新集合信息
         mArticleAdapter.notifyDataSetChanged(); //更新列表
         showShortToast("收藏成功");
     }
@@ -326,6 +327,8 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
         //更新列表（重新获取数据）
         currentPage = 0;
         mArticleAdapter = null;     //重置adapter，等于重头再来
+        //获取相关信息
         mPresenter.getHomeArticle(currentPage++);
+        mPresenter.getBannerInfo();
     }
 }

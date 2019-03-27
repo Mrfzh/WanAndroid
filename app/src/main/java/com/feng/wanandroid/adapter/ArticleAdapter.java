@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,7 +164,7 @@ public class ArticleAdapter extends BasePagingLoadAdapter<ArticleData> {
         if (TYPE_HEADER == getItemViewType(position)) {
             //header
             ((HeaderViewHolder)holder).homeBanner.setImageLoader(new MyImageLoader())  //设置图片加载器
-                    .setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE) //指定样式
+                    .setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE) //指定样式：显示圆形指示器和标题（水平显示）
                     .setImages(bannerInfoListener.getImageUrlList())   //设置图片url集合
                     .setBannerTitles(bannerInfoListener.getTitleList())     //设置title集合
                     .setDelayTime(3000)     //设置轮播时间

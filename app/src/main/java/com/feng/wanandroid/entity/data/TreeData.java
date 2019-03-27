@@ -1,12 +1,15 @@
 package com.feng.wanandroid.entity.data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author Feng Zhaohao
  * Created on 2018/12/15
  */
-public class TreeData {
+public class TreeData implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String name;    //一级分类名
     private List<Children> childrenList;    //二级分类集合
 

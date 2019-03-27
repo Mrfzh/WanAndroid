@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import com.feng.wanandroid.R;
 import com.feng.wanandroid.adapter.TreeAdapter;
 import com.feng.wanandroid.base.BaseFragment;
+import com.feng.wanandroid.cache.ACache;
 import com.feng.wanandroid.config.EventBusCode;
 import com.feng.wanandroid.contract.ITreeContract;
 import com.feng.wanandroid.entity.data.TreeData;
@@ -19,6 +20,7 @@ import com.feng.wanandroid.presenter.TreePresenter;
 import com.feng.wanandroid.utils.EventBusUtil;
 import com.feng.wanandroid.view.activity.TreeDetailedActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,7 @@ import butterknife.BindView;
 public class TreeFragment extends BaseFragment<TreePresenter> implements ITreeContract.View {
 
     private static final int DELAY_TIME = 500;
+    private static final String KEY_SAVE_TREE_DATA = "saveTreeDataList";
 
     @BindView(R.id.rv_tree_recycler_view)
     RecyclerView mRecyclerView;
@@ -40,11 +43,15 @@ public class TreeFragment extends BaseFragment<TreePresenter> implements ITreeCo
     ProgressBar mProgressBar;
 
     private TreeAdapter mTreeAdapter = null;
-//    private List<TreeData> mTreeDataList = new ArrayList<>();
+    private List<TreeData> mTreeDataList = new ArrayList<>();
+
+    private ACache mCache;
 
     @Override
     protected void doInOnCreate() {
         mPresenter.getTree();
+
+        mCache = ACache.get(getContext());
     }
 
     @Override
@@ -72,12 +79,25 @@ public class TreeFragment extends BaseFragment<TreePresenter> implements ITreeCo
      */
     @Override
     public void getTreeSuccess(List<TreeData> treeDataList) {
+        mTreeDataList = treeDataList;
         mProgressBar.setVisibility(View.GONE);
         mRefresh.setRefreshing(false);
 
         mTreeAdapter = null;
         //初始化adapter
-        mTreeAdapter = new TreeAdapter(getContext(), treeDataList);
+        initAdapter();
+        //配置RV
+        mRecyclerView.setAdapter(mTreeAdapter);
+
+        //缓存消息
+        mCache.put(KEY_SAVE_TREE_DATA, (Serializable) mTreeDataList);
+    }
+
+    /**
+     * 初始化adapter
+     */
+    private void initAdapter() {
+        mTreeAdapter = new TreeAdapter(getContext(), mTreeDataList);
         mTreeAdapter.setOnClickListener(new TreeAdapter.OnClickListener() {
             @Override
             public void clickItem(String name, List<String> childNames, List<Integer> ids) {
@@ -88,8 +108,6 @@ public class TreeFragment extends BaseFragment<TreePresenter> implements ITreeCo
                 jump2Activity(TreeDetailedActivity.class);
             }
         });
-        //配置RV
-        mRecyclerView.setAdapter(mTreeAdapter);
     }
 
     /**
@@ -102,6 +120,15 @@ public class TreeFragment extends BaseFragment<TreePresenter> implements ITreeCo
         mProgressBar.setVisibility(View.GONE);
         mRefresh.setRefreshing(false);
         showShortToast(errorMsg);
+
+        if (mTreeAdapter == null) {
+            //读取缓存
+            mTreeDataList = (List<TreeData>) mCache.getAsObject(KEY_SAVE_TREE_DATA);
+            //初始化adapter
+            initAdapter();
+        }
+        //配置RV
+        mRecyclerView.setAdapter(mTreeAdapter);
     }
 
     /**
