@@ -28,13 +28,19 @@ public class HomeEvent {
     }
 
     /**
-     * 用于刷新adapter和RV返回顶部
+     * 用于刷新adapter
      *
      * @param isRefresh 是否刷新
-     * @param isBackToTop 是否返回顶部
      */
-    public HomeEvent(boolean isRefresh, boolean isBackToTop) {
-        this(-1, false, isRefresh, isBackToTop);
+    public HomeEvent(boolean isRefresh) {
+        this(-1, false, isRefresh, false);
+    }
+
+    /**
+     * RV返回顶部
+     */
+    public HomeEvent() {
+        this(-1, false, false, true);
     }
 
     public int getPosition() {

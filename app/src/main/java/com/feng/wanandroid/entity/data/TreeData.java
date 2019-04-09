@@ -34,7 +34,9 @@ public class TreeData implements Serializable {
         this.childrenList = childrenList;
     }
 
-    public static class Children {
+    public static class Children implements Serializable{
+        private static final long serialVersionUID = 1L;
+
         private String name;    //二级分类名
         private int id;
 

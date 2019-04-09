@@ -15,10 +15,14 @@ import com.feng.wanandroid.config.EventBusCode;
 import com.feng.wanandroid.contract.ITreeContract;
 import com.feng.wanandroid.entity.data.TreeData;
 import com.feng.wanandroid.entity.eventbus.Event;
+import com.feng.wanandroid.entity.eventbus.HomeEvent;
 import com.feng.wanandroid.entity.eventbus.TreeDetailedEvent;
 import com.feng.wanandroid.presenter.TreePresenter;
 import com.feng.wanandroid.utils.EventBusUtil;
 import com.feng.wanandroid.view.activity.TreeDetailedActivity;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -90,7 +94,7 @@ public class TreeFragment extends BaseFragment<TreePresenter> implements ITreeCo
         mRecyclerView.setAdapter(mTreeAdapter);
 
         //缓存消息
-        mCache.put(KEY_SAVE_TREE_DATA, (Serializable) mTreeDataList);
+        mCache.put(KEY_SAVE_TREE_DATA, (Serializable) treeDataList);
     }
 
     /**
@@ -131,6 +135,27 @@ public class TreeFragment extends BaseFragment<TreePresenter> implements ITreeCo
         }
         //配置RV
         mRecyclerView.setAdapter(mTreeAdapter);
+    }
+
+    /**
+     * 注册EventBus
+     */
+    @Override
+    protected boolean isRegisterEventBus() {
+        return true;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventCome(Event<HomeEvent> event) {
+        switch (event.getCode()) {
+            case EventBusCode.Main2Tree:
+                if (event.getData().isBackToTop()) {
+                    mRecyclerView.smoothScrollToPosition(0);  //Rv返回顶部
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     /**

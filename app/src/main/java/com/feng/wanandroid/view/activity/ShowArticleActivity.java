@@ -195,7 +195,7 @@ public class ShowArticleActivity extends BaseActivity<HomePresenter> implements 
             EventBusUtil.sendEvent(event);
         } else {
             //直接刷新首页文章
-            Event<HomeEvent> event = new Event<>(EventBusCode.ShowArticle2Home, new HomeEvent(true, false));
+            Event<HomeEvent> event = new Event<>(EventBusCode.ShowArticle2Home, new HomeEvent(true));
             EventBusUtil.sendEvent(event);
         }
     }
@@ -225,7 +225,7 @@ public class ShowArticleActivity extends BaseActivity<HomePresenter> implements 
             EventBusUtil.sendEvent(event);
         } else {
             //直接刷新首页文章
-            Event<HomeEvent> event = new Event<>(EventBusCode.ShowArticle2Home, new HomeEvent(true, false));
+            Event<HomeEvent> event = new Event<>(EventBusCode.ShowArticle2Home, new HomeEvent(true));
             EventBusUtil.sendEvent(event);
             //刷新收藏页面
             Event<CollectionEvent> event1 = new Event<>(EventBusCode.ShowArticle2Collection, new CollectionEvent(true));

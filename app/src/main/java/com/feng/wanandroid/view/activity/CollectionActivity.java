@@ -210,7 +210,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
     public void multiUnCollectSuccess(List<Integer> removeIndexList) {
         refresh();  //重新刷新界面
         //更新首页文章
-        Event<HomeEvent> event = new Event<>(EventBusCode.Collection2Home, new HomeEvent(true, false));
+        Event<HomeEvent> event = new Event<>(EventBusCode.Collection2Home, new HomeEvent(true));
         EventBusUtil.sendEvent(event);
 
         mProgressBar.setVisibility(View.GONE);
@@ -247,7 +247,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
             }
         }
         //更新首页文章
-        Event<HomeEvent> event = new Event<>(EventBusCode.Collection2Home, new HomeEvent(true, false));
+        Event<HomeEvent> event = new Event<>(EventBusCode.Collection2Home, new HomeEvent(true));
         EventBusUtil.sendEvent(event);
     }
 

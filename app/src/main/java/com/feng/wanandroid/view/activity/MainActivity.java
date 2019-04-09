@@ -1,5 +1,6 @@
 package com.feng.wanandroid.view.activity;
 
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 
 import butterknife.BindColor;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity<MainPresenter> implements View.OnClickListener, IMainContract.View {
@@ -56,8 +58,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
     @BindView(R.id.fab_main_floating_action_btn)
     FloatingActionButton mBackToTopFab;
 
-    ImageView mHeadImage;
-    TextView mUserName;
+    private ImageView mHeadImage;
+    private TextView mUserName;
 
     @BindColor(R.color.color_tab_one)
     int mTabOneColor;
@@ -72,6 +74,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
     private Boolean mIsAutoLogin;   //是否自动登录
     private ArrayList<BaseFragment> mFragments;     //fragment集合
     private int mLastFgIndex;                       //记录上一个Fragment的索引
+    private int mCurrentFgIndex = 0;            //当前Fragment的索引
 
     public static final String TAG = "fzh";
 
@@ -143,6 +146,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
                 setToolbarTitle(Constant.TAB_TEXT[position]);
                 setStateBarColor(Constant.STATE_BAR_COLOR[position]);
                 setToolbarColor(mMainToolbar, Constant.TAB_COLOR[position]);
+                mCurrentFgIndex = position;
                 switchFragment(position);
             }
 
@@ -276,7 +280,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
         mHeadImage.setImageResource(R.drawable.head_image_unlogin);
         mUserName.setText("登录");
         //更新首页文章
-        Event<HomeEvent> homeEvent = new Event<>(EventBusCode.Main2Home, new HomeEvent(true, false));
+        Event<HomeEvent> homeEvent = new Event<>(EventBusCode.Main2Home, new HomeEvent(true));
         EventBusUtil.sendEvent(homeEvent);
     }
 
@@ -336,8 +340,25 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
 
     @OnClick(R.id.fab_main_floating_action_btn)
     public void onViewClicked() {
-        //返回顶部
-        Event<HomeEvent> homeEvent = new Event<>(EventBusCode.Main2Home, new HomeEvent(false, true));
+        backToTop();
+    }
+
+    /**
+     * 返回顶部
+     */
+    private void backToTop() {
+        Event<HomeEvent> homeEvent = null;
+        //根据当前Fragment页面发送不同的事件
+        switch (mCurrentFgIndex) {
+            case 0:
+                homeEvent = new Event<>(EventBusCode.Main2Home, new HomeEvent());
+                break;
+            case 1:
+                homeEvent = new Event<>(EventBusCode.Main2Tree, new HomeEvent());
+                break;
+            default:
+                break;
+        }
         EventBusUtil.sendEvent(homeEvent);
     }
 
