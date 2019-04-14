@@ -359,7 +359,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
             default:
                 break;
         }
-        EventBusUtil.sendEvent(homeEvent);
+        if (homeEvent != null) {
+            EventBusUtil.sendEvent(homeEvent);
+        }
     }
 
 }
