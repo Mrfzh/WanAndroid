@@ -70,19 +70,6 @@ public class CollectedArticleAdapter extends BasePagingLoadAdapter<ArticleData> 
         ((CollectedArticleViewHolder)holder).date.setText(list.get(position).getNiceDate());
         ((CollectedArticleViewHolder)holder).title.setText(list.get(position).getTitle());
         ((CollectedArticleViewHolder)holder).chapter.setText(list.get(position).getChapterName());
-        ((CollectedArticleViewHolder)holder).collect.setSelected(list.get(position).isCollect());
-        ((CollectedArticleViewHolder)holder).collect.setOnClickListener(v -> {
-            if (((CollectedArticleViewHolder)holder).checkBox.getVisibility() == View.GONE) {
-                boolean isCollect = list.get(position).isCollect();
-                clickListener.clickCollect(isCollect, list.get(position).getId(), holder.getAdapterPosition());
-            } else {
-                //处于编辑状态
-                boolean newCheck = !((CollectedArticleViewHolder)holder).checkBox.isChecked();
-                ((CollectedArticleViewHolder)holder).checkBox.setChecked(newCheck);
-                doInCheckStateChanged(newCheck, position, ((CollectedArticleViewHolder)holder).checkBox.getTag(),
-                        list.get(position).getId());
-            }
-        });
 
         ((CollectedArticleViewHolder)holder).itemView.setOnClickListener(v -> {
             //分两种情况
@@ -148,8 +135,6 @@ public class CollectedArticleAdapter extends BasePagingLoadAdapter<ArticleData> 
         TextView title;
         @BindView(R.id.tv_collected_article_chapter)
         TextView chapter;
-        @BindView(R.id.iv_collected_article_collect)
-        ImageView collect;
         @BindView(R.id.cb_item_collected_article_check_box)
         CheckBox checkBox;
 
