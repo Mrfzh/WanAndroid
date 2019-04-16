@@ -14,17 +14,23 @@ public interface ICollectionContract {
         void getCollectListError(String errorMsg);
         void multiUnCollectSuccess(List<Integer> removeIndexList);
         void multiUnCollectError(String errorMsg);
+        void unCollectSuccess(int position);
+        void unCollectError(String errorMsg);
     }
     interface Presenter {
         void getCollectListSuccess(List<ArticleData> articleDataList);
         void getCollectListError(String errorMsg);
         void multiUnCollectSuccess(List<Integer> removeIndexList);
         void multiUnCollectError(String errorMsg);
+        void unCollectSuccess(int position);
+        void unCollectError(String errorMsg);
         void getCollectList(int currentPage);
         void multiUnCollect(List<Integer> removeIndexList, List<Integer> idList);
+        void unCollect(int id, int position);
     }
     interface Model {
         void getCollectList(int currentPage);
         void multiUnCollect(List<Integer> removeIndexList, List<Integer> idList);
+        void unCollect(int id, int position);
     }
 }

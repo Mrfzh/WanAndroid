@@ -42,7 +42,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class CollectionActivity extends BaseActivity<CollectionPresenter> implements ICollectionContract.View,
-        BasePagingLoadAdapter.LoadMoreListener, IHomeContract.View {
+        BasePagingLoadAdapter.LoadMoreListener {
 
     private static final int DELAY_TIME = 2 * 500;
     private static final String TITLE_EDIT = "编辑";
@@ -70,7 +70,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
     private CollectedArticleAdapter mAdapter = null;
     private int currentPage = 0;
     private List<ArticleData> mArticleDataList = new ArrayList<>();
-    private HomePresenter mHomePresenter;
+//    private HomePresenter mHomePresenter;
 
     private List<Boolean> mCheckList = new ArrayList<>();   //存储item是否被选中
     private List<Integer> mIdList = new ArrayList<>();   //存储选中的item的id
@@ -101,8 +101,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
 
     @Override
     protected void doInOnCreate() {
-        mHomePresenter = new HomePresenter();
-        mHomePresenter.attachView(this);
+
     }
 
     @Override
@@ -129,9 +128,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mHomePresenter != null) {
-            mHomePresenter.detachView();
-        }
+
         LOAD_TIME = 1;
     }
 
@@ -262,16 +259,6 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
     }
 
     @Override
-    public void getBannerInfoSuccess(List<String> imageUrlList, List<String> titleList, List<String> urlList) {
-
-    }
-
-    @Override
-    public void getBannerInfoError(String errorMsg) {
-
-    }
-
-    @Override
     public void loadMore() {
         mPresenter.getCollectList(currentPage++);
     }
@@ -293,26 +280,6 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
                 break;
         }
     }
-
-    @Override
-    public void getHomeArticleSuccess(List<ArticleData> articleDataList) {
-
-    }
-
-    @Override
-    public void getHomeArticleError(String errorMsg) {
-
-    }
-
-    @Override
-    public void collectSuccess(int position) {
-    }
-
-    @Override
-    public void collectError(String errorMsg) {
-
-    }
-
 
     /**
      * 更新adapter
@@ -345,7 +312,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
                             .setOnClickListener(new TipDialog.OnClickListener() {
                                 @Override
                                 public void clickEnsure() {
-                                    mHomePresenter.unCollect(id, position);
+                                    //取消收藏
                                 }
 
                                 @Override
@@ -492,6 +459,5 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
 
         mSwipeRefreshLayout.setEnabled(false);  //设置为不能刷新
     }
-
 
 }

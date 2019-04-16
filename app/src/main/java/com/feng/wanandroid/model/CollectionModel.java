@@ -121,4 +121,33 @@ public class CollectionModel extends BaseModel implements ICollectionContract.Mo
                     }
                 });
     }
+
+    @Override
+    public void unCollect(int id, int position) {
+        execute(mAccountService.uncollect(id), new Observer<CollectBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(CollectBean collectBean) {
+                if (!collectBean.getErrorMsg().equals("")) {
+                    mPresenter.unCollectError(collectBean.getErrorMsg());
+                } else {
+                    mPresenter.unCollectSuccess(position);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mPresenter.unCollectError(Constant.ERROR_MSG);
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
 }
