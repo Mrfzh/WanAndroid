@@ -15,12 +15,14 @@ import com.feng.wanandroid.R;
 import com.feng.wanandroid.base.BaseActivity;
 import com.feng.wanandroid.config.EventBusCode;
 import com.feng.wanandroid.contract.IHomeContract;
+import com.feng.wanandroid.contract.IShowArticleContract;
 import com.feng.wanandroid.entity.data.ArticleData;
 import com.feng.wanandroid.entity.eventbus.CollectionEvent;
 import com.feng.wanandroid.entity.eventbus.Event;
 import com.feng.wanandroid.entity.eventbus.HomeEvent;
 import com.feng.wanandroid.entity.eventbus.ShowArticleEvent;
 import com.feng.wanandroid.presenter.HomePresenter;
+import com.feng.wanandroid.presenter.ShowArticlePresenter;
 import com.feng.wanandroid.utils.EventBusUtil;
 import com.feng.wanandroid.utils.IntentUtil;
 import com.feng.wanandroid.utils.ShareUtil;
@@ -32,7 +34,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class ShowArticleActivity extends BaseActivity<HomePresenter> implements IHomeContract.View {
+public class ShowArticleActivity extends BaseActivity<ShowArticlePresenter> implements IShowArticleContract.View {
 
     private String mLink;
     private String mTitle;
@@ -57,8 +59,8 @@ public class ShowArticleActivity extends BaseActivity<HomePresenter> implements 
     }
 
     @Override
-    protected HomePresenter getPresenter() {
-        return new HomePresenter();
+    protected ShowArticlePresenter getPresenter() {
+        return new ShowArticlePresenter();
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -170,16 +172,6 @@ public class ShowArticleActivity extends BaseActivity<HomePresenter> implements 
         return true;
     }
 
-    @Override
-    public void getHomeArticleSuccess(List<ArticleData> articleDataList) {
-
-    }
-
-    @Override
-    public void getHomeArticleError(String errorMsg) {
-
-    }
-
     /**
      * 收藏成功
      *
@@ -241,16 +233,6 @@ public class ShowArticleActivity extends BaseActivity<HomePresenter> implements 
     @Override
     public void unCollectError(String errorMsg) {
         showShortToast(errorMsg);
-    }
-
-    @Override
-    public void getBannerInfoSuccess(List<String> imageUrlList, List<String> titleList, List<String> urlList) {
-
-    }
-
-    @Override
-    public void getBannerInfoError(String errorMsg) {
-
     }
 
     @Override
