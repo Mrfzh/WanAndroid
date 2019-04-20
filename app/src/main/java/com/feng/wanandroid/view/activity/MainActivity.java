@@ -1,6 +1,5 @@
 package com.feng.wanandroid.view.activity;
 
-import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -28,7 +27,7 @@ import com.feng.wanandroid.presenter.MainPresenter;
 import com.feng.wanandroid.utils.EventBusUtil;
 import com.feng.wanandroid.utils.Preferences;
 import com.feng.wanandroid.view.fragment.HomeFragment;
-import com.feng.wanandroid.view.fragment.NaviFragment;
+import com.feng.wanandroid.view.fragment.NavigationFragment;
 import com.feng.wanandroid.view.fragment.ProjectFragment;
 import com.feng.wanandroid.view.fragment.TreeFragment;
 import com.feng.wanandroid.widget.dialog.TipDialog;
@@ -40,7 +39,6 @@ import java.util.ArrayList;
 
 import butterknife.BindColor;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity<MainPresenter> implements View.OnClickListener, IMainContract.View {
@@ -235,7 +233,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
         mFragments = new ArrayList<>();
         mFragments.add(new HomeFragment());
         mFragments.add(new TreeFragment());
-        mFragments.add(new NaviFragment());
+        mFragments.add(new NavigationFragment());
         mFragments.add(new ProjectFragment());
     }
 
