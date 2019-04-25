@@ -14,14 +14,12 @@ import android.widget.ProgressBar;
 import com.feng.wanandroid.R;
 import com.feng.wanandroid.base.BaseActivity;
 import com.feng.wanandroid.config.EventBusCode;
-import com.feng.wanandroid.contract.IHomeContract;
 import com.feng.wanandroid.contract.IShowArticleContract;
-import com.feng.wanandroid.entity.data.ArticleData;
 import com.feng.wanandroid.entity.eventbus.CollectionEvent;
 import com.feng.wanandroid.entity.eventbus.Event;
 import com.feng.wanandroid.entity.eventbus.HomeEvent;
 import com.feng.wanandroid.entity.eventbus.ShowArticleEvent;
-import com.feng.wanandroid.presenter.HomePresenter;
+import com.feng.wanandroid.entity.eventbus.TreeArticleCatalogEvent;
 import com.feng.wanandroid.presenter.ShowArticlePresenter;
 import com.feng.wanandroid.utils.EventBusUtil;
 import com.feng.wanandroid.utils.IntentUtil;
@@ -29,8 +27,6 @@ import com.feng.wanandroid.utils.ShareUtil;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
 
 import butterknife.BindView;
 
@@ -193,6 +189,8 @@ public class ShowArticleActivity extends BaseActivity<ShowArticlePresenter> impl
                 break;
             case ShowArticleEvent.FROM_TREE:    //从体系文章跳转而来
                 //更新体系文章
+                EventBusUtil.sendEvent(new Event<>(EventBusCode.ShowArticle2TreeArticleCatelog,
+                        new TreeArticleCatalogEvent(position, true)));
                 break;
             default:
                 break;
@@ -232,6 +230,9 @@ public class ShowArticleActivity extends BaseActivity<ShowArticlePresenter> impl
                 EventBusUtil.sendEvent(new Event<>(EventBusCode.ShowArticle2Collection, new CollectionEvent(true)));
                 break;
             case ShowArticleEvent.FROM_TREE:
+                //更新体系文章
+                EventBusUtil.sendEvent(new Event<>(EventBusCode.ShowArticle2TreeArticleCatelog,
+                        new TreeArticleCatalogEvent(position, false)));
                 break;
             default:
                 break;

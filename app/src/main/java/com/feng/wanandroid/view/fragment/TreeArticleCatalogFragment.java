@@ -3,7 +3,6 @@ package com.feng.wanandroid.view.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.feng.wanandroid.R;
 import com.feng.wanandroid.adapter.TreeArticleAdapter;
@@ -14,10 +13,14 @@ import com.feng.wanandroid.contract.ITreeArticleCatalogContract;
 import com.feng.wanandroid.entity.data.ArticleData;
 import com.feng.wanandroid.entity.eventbus.Event;
 import com.feng.wanandroid.entity.eventbus.ShowArticleEvent;
+import com.feng.wanandroid.entity.eventbus.TreeArticleCatalogEvent;
 import com.feng.wanandroid.presenter.TreeArticleCatalogPresenter;
 import com.feng.wanandroid.utils.EventBusUtil;
 import com.feng.wanandroid.view.activity.ShowArticleActivity;
 import com.feng.wanandroid.widget.custom.LoadMoreScrollListener;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 import java.util.Objects;
@@ -204,5 +207,28 @@ public class TreeArticleCatalogFragment extends BaseFragment<TreeArticleCatalogP
                 jump2Activity(ShowArticleActivity.class);
             }
         });
+    }
+
+    /**
+     * 注册EventBus
+     *
+     * @return
+     */
+    @Override
+    protected boolean isRegisterEventBus() {
+        return true;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventCome(Event<TreeArticleCatalogEvent> event) {
+        switch (event.getCode()) {
+            case EventBusCode.ShowArticle2TreeArticleCatelog:
+                //更新文章列表
+                mArticleDataList.get(event.getData().getPosition()).setCollect(event.getData().isCollected());
+                mTreeArticleAdapter.notifyDataSetChanged();
+                break;
+            default:
+                break;
+        }
     }
 }
