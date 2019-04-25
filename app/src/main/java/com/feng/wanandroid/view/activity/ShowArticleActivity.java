@@ -41,8 +41,8 @@ public class ShowArticleActivity extends BaseActivity<ShowArticlePresenter> impl
     private boolean mIsCollect;
     private int mPosition;
     private int mId;
-    private boolean mIsFromCollect;     //是否从收藏页面跳转来
     private boolean mIsHideCollect = false;     //是否隐藏收藏菜单
+    private int mFrom;          //活动跳转来源
 
     private Menu mMenu;
 
@@ -126,7 +126,6 @@ public class ShowArticleActivity extends BaseActivity<ShowArticlePresenter> impl
     protected void initToolbar() {
         super.initToolbar();
         setToolbarTitle(mTitle);
-//        mToolbar.setTitleTextAppearance(this, R.style.ArticleToolbarTitle);
     }
 
     @Override
@@ -182,14 +181,23 @@ public class ShowArticleActivity extends BaseActivity<ShowArticlePresenter> impl
         showShortToast("收藏成功");
         setMenuTitle(mMenu, 0, "取消收藏");
         mIsCollect = true;
-        if (!mIsFromCollect) {
-            Event<HomeEvent> event = new Event<>(EventBusCode.ShowArticle2Home, new HomeEvent(position, true));
-            EventBusUtil.sendEvent(event);
-        } else {
-            //直接刷新首页文章
-            Event<HomeEvent> event = new Event<>(EventBusCode.ShowArticle2Home, new HomeEvent(true));
-            EventBusUtil.sendEvent(event);
+
+        switch (mFrom) {
+            case ShowArticleEvent.FROM_HOME:    //如果是从首页跳转过来
+                //更新首页文章
+                EventBusUtil.sendEvent(new Event<>(EventBusCode.ShowArticle2Home, new HomeEvent(position, true)));
+                break;
+            case ShowArticleEvent.FROM_COLLECT: //从收藏页面跳转过来
+                //直接刷新首页文章
+                EventBusUtil.sendEvent(new Event<>(EventBusCode.ShowArticle2Home, new HomeEvent(true)));
+                break;
+            case ShowArticleEvent.FROM_TREE:    //从体系文章跳转而来
+                //更新体系文章
+                break;
+            default:
+                break;
         }
+
     }
 
     /**
@@ -212,17 +220,23 @@ public class ShowArticleActivity extends BaseActivity<ShowArticlePresenter> impl
         showShortToast("取消收藏");
         setMenuTitle(mMenu, 0, "收藏");
         mIsCollect = false;
-        if (!mIsFromCollect) {
-            Event<HomeEvent> event = new Event<>(EventBusCode.ShowArticle2Home, new HomeEvent(position, false));
-            EventBusUtil.sendEvent(event);
-        } else {
-            //直接刷新首页文章
-            Event<HomeEvent> event = new Event<>(EventBusCode.ShowArticle2Home, new HomeEvent(true));
-            EventBusUtil.sendEvent(event);
-            //刷新收藏页面
-            Event<CollectionEvent> event1 = new Event<>(EventBusCode.ShowArticle2Collection, new CollectionEvent(true));
-            EventBusUtil.sendEvent(event1);
+
+        switch (mFrom) {
+            case ShowArticleEvent.FROM_HOME:    //如果是从首页跳转过来
+                EventBusUtil.sendEvent(new Event<>(EventBusCode.ShowArticle2Home, new HomeEvent(position, false)));
+                break;
+            case ShowArticleEvent.FROM_COLLECT: //从收藏页面跳转过来
+                //直接刷新首页文章
+                EventBusUtil.sendEvent(new Event<>(EventBusCode.ShowArticle2Home, new HomeEvent(true)));
+                //刷新收藏页面
+                EventBusUtil.sendEvent(new Event<>(EventBusCode.ShowArticle2Collection, new CollectionEvent(true)));
+                break;
+            case ShowArticleEvent.FROM_TREE:
+                break;
+            default:
+                break;
         }
+
     }
 
     /**
@@ -251,8 +265,8 @@ public class ShowArticleActivity extends BaseActivity<ShowArticlePresenter> impl
                 mIsCollect = event.getData().isCollect();
                 mId = event.getData().getId();
                 mPosition = event.getData().getPosition();
-                mIsFromCollect = event.getData().isFromCollect();
-                mIsHideCollect = false;
+                mFrom = event.getData().getFrom();
+                mIsHideCollect = event.getData().isHideCollect();
                 break;
             case EventBusCode.HomeBanner2ShowArticle:
                 mLink = event.getData().getLink();

@@ -328,7 +328,7 @@ public class CollectionActivity extends BaseActivity<CollectionPresenter> implem
             @Override
             public void clickItem(String link, String title, boolean isCollect, int id, int position) {
                 Event<ShowArticleEvent> event = new Event<>(EventBusCode.Collection2ShowArticle, new ShowArticleEvent(link,
-                        title, isCollect, id, position, true));
+                        title, isCollect, id, position, ShowArticleEvent.FROM_COLLECT, false));
                 EventBusUtil.sendStickyEvent(event);
                 jumpToNewActivity(ShowArticleActivity.class);
             }

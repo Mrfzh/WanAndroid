@@ -10,25 +10,30 @@ public class ShowArticleEvent {
     private boolean isCollect;
     private int id;
     private int position;
-    private boolean isFromCollect;
+    private int from;
     private boolean isHideCollect;
 
-    private ShowArticleEvent(String link, String title, boolean isCollect, int id, int position, boolean isFromCollect, boolean isHideCollect) {
+    public static final int FROM_COLLECT = 0;
+    public static final int FROM_HOME = 1;
+    public static final int FROM_TREE = 2;
+
+    /**
+     * @param link 文章链接
+     * @param title 文章标题
+     * @param isCollect 文章是否被收藏
+     * @param id 文章id
+     * @param position 位置
+     * @param from 从哪个活动跳转而来
+     * @param isHideCollect 是否隐藏收藏菜单
+     */
+    public ShowArticleEvent(String link, String title, boolean isCollect, int id, int position, int from, boolean isHideCollect) {
         this.link = link;
         this.title = title;
         this.isCollect = isCollect;
         this.id = id;
         this.position = position;
-        this.isFromCollect = isFromCollect;
+        this.from = from;
         this.isHideCollect = isHideCollect;
-    }
-
-    public ShowArticleEvent(String link, String title, boolean isCollect, int id, int position, boolean isFromCollect) {
-        this(link, title, isCollect, id, position, isFromCollect, false);
-    }
-
-    public ShowArticleEvent(String link, String title) {
-        this(link, title, false, -1, -1, false, true);
     }
 
     public String getLink() {
@@ -71,12 +76,12 @@ public class ShowArticleEvent {
         this.position = position;
     }
 
-    public boolean isFromCollect() {
-        return isFromCollect;
+    public int getFrom() {
+        return from;
     }
 
-    public void setFromCollect(boolean fromCollect) {
-        isFromCollect = fromCollect;
+    public void setFrom(int from) {
+        this.from = from;
     }
 
     public boolean isHideCollect() {

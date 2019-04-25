@@ -293,7 +293,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
             @Override
             public void clickItem(String link, String title, boolean isCollect, int id, int position) {
                 Event<ShowArticleEvent> event = new Event<>(EventBusCode.Home2ShowArticle, new ShowArticleEvent(link,
-                        title, isCollect, id, position, false));
+                        title, isCollect, id, position, ShowArticleEvent.FROM_HOME,false));
                 EventBusUtil.sendStickyEvent(event);
                 jump2Activity(ShowArticleActivity.class);
             }
@@ -302,7 +302,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
             public void clickBannerItem(int position) {
                 //活动跳转，跳转到显示文章活动
                 Event<ShowArticleEvent> event = new Event<>(EventBusCode.HomeBanner2ShowArticle, new ShowArticleEvent(
-                        mUrlList.get(position), mTitleList.get(position)));
+                        mUrlList.get(position), mTitleList.get(position), false, -1, -1, -1, true));
                 EventBusUtil.sendStickyEvent(event);
                 jump2Activity(ShowArticleActivity.class);
             }

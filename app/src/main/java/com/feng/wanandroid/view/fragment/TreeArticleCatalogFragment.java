@@ -199,7 +199,7 @@ public class TreeArticleCatalogFragment extends BaseFragment<TreeArticleCatalogP
             @Override
             public void clickItem(String link, String title, boolean isCollect, int id, int position) {
                 Event<ShowArticleEvent> event = new Event<>(EventBusCode.TreeArticle2ShowArticle, new ShowArticleEvent(link,
-                        title, isCollect, id, position, false));
+                        title, isCollect, id, position, ShowArticleEvent.FROM_TREE, false));
                 EventBusUtil.sendStickyEvent(event);
                 jump2Activity(ShowArticleActivity.class);
             }
