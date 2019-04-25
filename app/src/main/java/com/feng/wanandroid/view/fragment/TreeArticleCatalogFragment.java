@@ -129,6 +129,50 @@ public class TreeArticleCatalogFragment extends BaseFragment<TreeArticleCatalogP
     }
 
     /**
+     * 收藏成功
+     *
+     * @param position
+     */
+    @Override
+    public void collectSuccess(int position) {
+        mArticleDataList.get(position).setCollect(true);    //更新集合
+        mTreeArticleAdapter.notifyDataSetChanged();     //更新RV
+        showShortToast("收藏成功");
+    }
+
+    /**
+     * 收藏失败
+     *
+     * @param errorMsg
+     */
+    @Override
+    public void collectError(String errorMsg) {
+        showShortToast(errorMsg);
+    }
+
+    /**
+     * 取消收藏成功
+     *
+     * @param position
+     */
+    @Override
+    public void unCollectSuccess(int position) {
+        mArticleDataList.get(position).setCollect(false);    //更新集合
+        mTreeArticleAdapter.notifyDataSetChanged();     //更新RV
+        showShortToast("取消收藏");
+    }
+
+    /**
+     * 取消收藏失败
+     *
+     * @param errorMsg
+     */
+    @Override
+    public void unCollectError(String errorMsg) {
+        showShortToast(errorMsg);
+    }
+
+    /**
      * 加载更多操作
      */
     @Override
@@ -143,8 +187,13 @@ public class TreeArticleCatalogFragment extends BaseFragment<TreeArticleCatalogP
         mTreeArticleAdapter = new TreeArticleAdapter(getContext(), mArticleDataList, this);
         mTreeArticleAdapter.setClickListener(new TreeArticleAdapter.OnClickListener() {
             @Override
-            public void clickCollect(boolean collect, int id, int position) {
-
+            public void clickCollect(boolean isCollect, int id, int position) {
+                //点击收藏按钮
+                if (isCollect) {
+                    mPresenter.unCollect(id, position); //取消收藏
+                } else {
+                    mPresenter.collect(id, position);   //收藏
+                }
             }
 
             @Override

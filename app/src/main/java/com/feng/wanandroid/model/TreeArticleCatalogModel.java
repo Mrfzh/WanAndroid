@@ -3,10 +3,12 @@ package com.feng.wanandroid.model;
 import com.feng.wanandroid.base.BaseModel;
 import com.feng.wanandroid.config.Constant;
 import com.feng.wanandroid.contract.ITreeArticleCatalogContract;
+import com.feng.wanandroid.entity.bean.CollectBean;
 import com.feng.wanandroid.entity.bean.HomeArticleBean;
 import com.feng.wanandroid.entity.bean.TreeArticleBean;
 import com.feng.wanandroid.entity.data.ArticleData;
 import com.feng.wanandroid.http.RetrofitHelper;
+import com.feng.wanandroid.http.api.AccountService;
 import com.feng.wanandroid.http.api.TreeService;
 
 import java.util.ArrayList;
@@ -23,11 +25,13 @@ public class TreeArticleCatalogModel extends BaseModel implements ITreeArticleCa
 
     private ITreeArticleCatalogContract.Presenter mPresenter;
     private TreeService mTreeService;
+    private AccountService mAccountService;
     private List<ArticleData> mArticleDataList = new ArrayList<>();
 
     public TreeArticleCatalogModel(ITreeArticleCatalogContract.Presenter mPresenter) {
         this.mPresenter = mPresenter;
         mTreeService = RetrofitHelper.getInstance().create(TreeService.class);
+        mAccountService = RetrofitHelper.getInstance().create(AccountService.class);
     }
 
     /**
@@ -71,6 +75,65 @@ public class TreeArticleCatalogModel extends BaseModel implements ITreeArticleCa
             public void onError(Throwable e) {
                 e.printStackTrace();
                 mPresenter.getArticleInfoError(Constant.ERROR_MSG);
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+
+    @Override
+    public void collect(int id, int position) {
+        execute(mAccountService.collect(id), new Observer<CollectBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(CollectBean collectBean) {
+                if (!collectBean.getErrorMsg().equals("")) {
+                    mPresenter.collectError(collectBean.getErrorMsg());
+                } else {
+                    mPresenter.collectSuccess(position);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                mPresenter.collectError(Constant.ERROR_MSG);
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+
+    @Override
+    public void unCollect(int id, int position) {
+        execute(mAccountService.uncollect(id), new Observer<CollectBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(CollectBean collectBean) {
+                if (!collectBean.getErrorMsg().equals("")) {
+                    mPresenter.unCollectError(collectBean.getErrorMsg());
+                } else {
+                    mPresenter.unCollectSuccess(position);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mPresenter.unCollectError(Constant.ERROR_MSG);
             }
 
             @Override

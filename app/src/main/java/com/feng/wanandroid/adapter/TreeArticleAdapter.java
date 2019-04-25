@@ -28,7 +28,7 @@ public class TreeArticleAdapter extends BasePagingLoadAdapter<ArticleData> {
 
     public interface OnClickListener {
         //        void clickChapter();      //点击了栏目（以后再实现）
-        void clickCollect(boolean collect, int id, int position);    //点击了收藏item
+        void clickCollect(boolean isCollect, int id, int position);    //点击了收藏item
         void clickItem(String link, String title, boolean isCollect, int id, int position);
     }
 
