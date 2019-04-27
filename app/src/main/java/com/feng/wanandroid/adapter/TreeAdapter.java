@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
  * @author Feng Zhaohao
  * Created on 2018/12/15
  */
-public class TreeAdapter extends RecyclerView.Adapter {
+public class TreeAdapter extends RecyclerView.Adapter<TreeAdapter.TreeViewHolder> {
 
     private Context mContext;
     private List<TreeData> mTreeDataList;
@@ -45,31 +45,32 @@ public class TreeAdapter extends RecyclerView.Adapter {
         this.onClickListener = onClickListener;
     }
 
+
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new TreeViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_tree, parent, false));
+    public TreeViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        return new TreeViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_tree, viewGroup, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((TreeViewHolder)holder).name.setText(mTreeDataList.get(position).getName());
+    public void onBindViewHolder(@NonNull TreeViewHolder treeViewHolder, int i) {
+        treeViewHolder.name.setText(mTreeDataList.get(i).getName());
 
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < mTreeDataList.get(position).getChildrenList().size(); i++) {
-            builder.append(mTreeDataList.get(position).getChildrenList().get(i).getName());
+        for (int j = 0; j < mTreeDataList.get(i).getChildrenList().size(); j++) {
+            builder.append(mTreeDataList.get(i).getChildrenList().get(j).getName());
             builder.append("   ");
         }
-        ((TreeViewHolder)holder).childrenName.setText(builder.toString());
+        treeViewHolder.childrenName.setText(builder.toString());
 
-        holder.itemView.setOnClickListener(v -> {
+        treeViewHolder.itemView.setOnClickListener(v -> {
             List<String> childNames = new ArrayList<>();
             List<Integer> ids = new ArrayList<>();
-            for (int i = 0; i < mTreeDataList.get(position).getChildrenList().size(); i++) {
-                childNames.add(mTreeDataList.get(position).getChildrenList().get(i).getName());
-                ids.add(mTreeDataList.get(position).getChildrenList().get(i).getId());
+            for (int j = 0; j < mTreeDataList.get(i).getChildrenList().size(); j++) {
+                childNames.add(mTreeDataList.get(i).getChildrenList().get(j).getName());
+                ids.add(mTreeDataList.get(i).getChildrenList().get(j).getId());
             }
-            onClickListener.clickItem(mTreeDataList.get(position).getName(), childNames, ids);
+            onClickListener.clickItem(mTreeDataList.get(i).getName(), childNames, ids);
         });
     }
 
