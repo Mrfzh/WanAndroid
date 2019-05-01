@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_item_navi_chapter_data_chapter_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="常用网站"
+        android:textSize="20sp"
+        android:layout_margin="5dp"/>
+
+    <com.zhy.view.flowlayout.TagFlowLayout
+        android:id="@+id/tfv_item_navi_chapter_data_chapter_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"/>
+
+</LinearLayout>

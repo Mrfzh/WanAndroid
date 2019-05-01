@@ -2,12 +2,14 @@ package com.feng.wanandroid.view.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.feng.wanandroid.R;
+import com.feng.wanandroid.adapter.NaviChapterDataAdapter;
 import com.feng.wanandroid.base.BaseFragment;
 import com.feng.wanandroid.contract.INavigationContract;
 import com.feng.wanandroid.entity.data.NavigationData;
@@ -69,6 +71,7 @@ public class NavigationFragment extends BaseFragment<NavigationPresenter> implem
         mChapterData = navigationData.getChapterData();
 
         initChapterTabLayout();
+        initChapterDataList();
     }
 
     /**
@@ -81,6 +84,9 @@ public class NavigationFragment extends BaseFragment<NavigationPresenter> implem
         showShortToast(errorMsg);
     }
 
+    /**
+     * 初始化左边导航栏
+     */
     private void initChapterTabLayout() {
         mChapterVerticalTabVtv.setTabAdapter(new TabAdapter() {
             @Override
@@ -111,6 +117,27 @@ public class NavigationFragment extends BaseFragment<NavigationPresenter> implem
                 return 0;
             }
         });
+        //点击事件回调
+        mChapterVerticalTabVtv.addOnTabSelectedListener(new VerticalTabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabView tab, int position) {
+                mChapterDataRv.smoothScrollToPosition(position);    //右侧的导航数据列表移动到相应位置
+            }
+
+            @Override
+            public void onTabReselected(TabView tab, int position) {
+
+            }
+        });
+    }
+
+    /**
+     * 初始化右边导航数据列表
+     */
+    private void initChapterDataList() {
+        mChapterDataRv.setLayoutManager(new LinearLayoutManager(getContext()));
+        NaviChapterDataAdapter adapter = new NaviChapterDataAdapter(getContext(), mChapterNames, mChapterData);
+        mChapterDataRv.setAdapter(adapter);
     }
 
 }
