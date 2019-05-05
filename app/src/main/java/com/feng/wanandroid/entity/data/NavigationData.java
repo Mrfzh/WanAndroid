@@ -1,12 +1,15 @@
 package com.feng.wanandroid.entity.data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author Feng Zhaohao
  * Created on 2019/4/20
  */
-public class NavigationData {
+public class NavigationData implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private List<String> chapterNames;
     private List<ChapterData> chapterData;
 
@@ -31,7 +34,9 @@ public class NavigationData {
         this.chapterData = chapterData;
     }
 
-    public static class ChapterData {
+    public static class ChapterData implements Serializable{
+        private static final long serialVersionUID = 1L;
+
         private List<String> titles;
         private List<String> links;
 

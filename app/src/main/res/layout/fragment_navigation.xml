@@ -1,28 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="?attr/actionBarSize"
     android:background="@color/color_white_max"
-    android:clickable="true"
-    android:orientation="horizontal">
+    android:clickable="true">
 
-    <q.rorbin.verticaltablayout.VerticalTabLayout
-        android:id="@+id/vtv_navigation_chapter_vertical_tab"
-        android:layout_width="100dp"
-        android:layout_height="match_parent"
-        android:background="@android:color/darker_gray"
-        app:indicator_color="@android:color/holo_blue_light"
-        app:indicator_gravity="fill"
-        app:tab_height="50dp"
-        app:tab_mode="scrollable"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_navigation_chapter_data"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srv_navigation_refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none"
-        android:overScrollMode="never"/>
+        android:layout_height="wrap_content">
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <q.rorbin.verticaltablayout.VerticalTabLayout
+                android:id="@+id/vtv_navigation_chapter_vertical_tab"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/darker_gray"
+                app:indicator_color="@android:color/holo_blue_light"
+                app:indicator_gravity="fill"
+                app:tab_height="50dp"
+                app:tab_mode="scrollable"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_navigation_chapter_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:overScrollMode="never"/>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <ProgressBar
+        android:id="@+id/pb_navigation"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminateTint="@color/color_tab_one"
+        android:visibility="visible" />
+
+</RelativeLayout>

@@ -41,7 +41,7 @@ public class NavigationModel extends BaseModel implements INavigationContract.Mo
                 if (navigationBean.getErrorMsg().equals("")) {
                     //处理接收到的导航数据
                     List<String> chapterNames = new ArrayList<>();
-                    List<NavigationData.ChapterData> chapterData = new ArrayList<>();
+                    List<NavigationData.ChapterData> chapterDataList = new ArrayList<>();
 
                     List<NavigationBean.DataBean> dataBeans = navigationBean.getData();
                     for (int i = 0; i < dataBeans.size(); i++) {
@@ -53,10 +53,10 @@ public class NavigationModel extends BaseModel implements INavigationContract.Mo
                             titles.add(articlesBeans.get(j).getTitle());
                             links.add(articlesBeans.get(j).getLink());
                         }
-                        chapterData.add(new NavigationData.ChapterData(titles, links));
+                        chapterDataList.add(new NavigationData.ChapterData(titles, links));
                     }
 
-                    NavigationData navigationData = new NavigationData(chapterNames, chapterData);
+                    NavigationData navigationData = new NavigationData(chapterNames, chapterDataList);
                     mPresenter.getNavigationDataSuccess(navigationData);
                 } else {
                     mPresenter.getNavigationDataError(navigationBean.getErrorMsg());
