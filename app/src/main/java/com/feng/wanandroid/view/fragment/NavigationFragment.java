@@ -3,9 +3,11 @@ package com.feng.wanandroid.view.fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +40,7 @@ public class NavigationFragment extends BaseFragment<NavigationPresenter> implem
 
     private static final int REFRESH_TIME = 1000;
     private static final String KEY_SAVE_NAVI = "KEY_SAVE_NAVI";
+    private static final String TAG = "fzh";
 
     @BindView(R.id.vtv_navigation_chapter_vertical_tab)
     VerticalTabLayout mChapterVerticalTabVtv;
@@ -51,11 +54,13 @@ public class NavigationFragment extends BaseFragment<NavigationPresenter> implem
     private List<String> mChapterNames = new ArrayList<>();
     private List<NavigationData.ChapterData> mChapterData = new ArrayList<>();
 
+    private LinearLayoutManager mLinearLayoutManager;
     private ACache mCache;
 
     @Override
     protected void doInOnCreate() {
         mPresenter.getNavigationData();
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
         mCache = ACache.get(getContext());
     }
 
@@ -171,9 +176,22 @@ public class NavigationFragment extends BaseFragment<NavigationPresenter> implem
      * 初始化右边导航数据列表
      */
     private void initChapterDataList() {
-        mChapterDataRv.setLayoutManager(new LinearLayoutManager(getContext()));
+        mChapterDataRv.setLayoutManager(mLinearLayoutManager);
         NaviChapterDataAdapter adapter = new NaviChapterDataAdapter(getContext(), mChapterNames, mChapterData);
         mChapterDataRv.setAdapter(adapter);
+        mChapterDataRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                switch (newState) {
+                    case RecyclerView.SCROLL_STATE_IDLE:    //静止时
+                        //右边列表停止滑动后，设置左边导航栏的位置
+                        mChapterVerticalTabVtv.setTabSelected(mLinearLayoutManager.findFirstCompletelyVisibleItemPosition());
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
     }
 
     /**
