@@ -61,13 +61,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
     private TextView mUserName;
 
     @BindColor(R.color.color_tab_one)
-    int mTabOneColor;
-    @BindColor(R.color.color_tab_two)
-    int mTabTwoColor;
-    @BindColor(R.color.color_tab_three)
-    int mTabThreeColor;
-    @BindColor(R.color.color_tab_four)
-    int mTabFourColor;
+    int mTabColor;
 
     private String mOldUserName;    //之前登录的用户名
     private Boolean mIsAutoLogin;   //是否自动登录
@@ -130,10 +124,10 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
      */
     private void initBottomBar() {
         //初始化底部导航栏
-        mMainBottomNavigationBar.addItem(new BottomNavigationItem(R.drawable.tab_one_icon, Constant.TAB_TEXT[0]).setActiveColor(mTabOneColor))
-                .addItem(new BottomNavigationItem(R.drawable.tab_two_icon, Constant.TAB_TEXT[1]).setActiveColor(mTabOneColor))
-                .addItem(new BottomNavigationItem(R.drawable.tab_three_icon, Constant.TAB_TEXT[2]).setActiveColor(mTabOneColor))
-                .addItem(new BottomNavigationItem(R.drawable.tab_four_icon, Constant.TAB_TEXT[3]).setActiveColor(mTabOneColor))
+        mMainBottomNavigationBar.addItem(new BottomNavigationItem(R.drawable.tab_one_icon, Constant.TAB_TEXT[0]).setActiveColor(mTabColor))
+                .addItem(new BottomNavigationItem(R.drawable.tab_two_icon, Constant.TAB_TEXT[1]).setActiveColor(mTabColor))
+                .addItem(new BottomNavigationItem(R.drawable.tab_three_icon, Constant.TAB_TEXT[2]).setActiveColor(mTabColor))
+                .addItem(new BottomNavigationItem(R.drawable.tab_four_icon, Constant.TAB_TEXT[3]).setActiveColor(mTabColor))
                 .setFirstSelectedPosition(0)
                 .setMode(BottomNavigationBar.MODE_FIXED)    //显示文字
                 .setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_RIPPLE)    //设置背景
@@ -143,8 +137,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
             @Override
             public void onTabSelected(int position) {
                 setToolbarTitle(Constant.TAB_TEXT[position]);
-                setStateBarColor(Constant.STATE_BAR_COLOR[position]);
-                setToolbarColor(mMainToolbar, Constant.TAB_COLOR[position]);
+                setStateBarColor(R.color.color_state_bar_one);
+                setToolbarColor(mMainToolbar, R.color.color_tab_one);
                 mCurrentFgIndex = position;
                 switchFragment(position);
             }
