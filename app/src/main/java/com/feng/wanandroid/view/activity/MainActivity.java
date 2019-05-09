@@ -23,6 +23,7 @@ import com.feng.wanandroid.contract.IMainContract;
 import com.feng.wanandroid.entity.eventbus.Event;
 import com.feng.wanandroid.entity.eventbus.HomeEvent;
 import com.feng.wanandroid.entity.eventbus.MainEvent;
+import com.feng.wanandroid.entity.eventbus.TreeEvent;
 import com.feng.wanandroid.presenter.MainPresenter;
 import com.feng.wanandroid.utils.EventBusUtil;
 import com.feng.wanandroid.utils.Preferences;
@@ -345,20 +346,23 @@ public class MainActivity extends BaseActivity<MainPresenter> implements View.On
      * 返回顶部
      */
     private void backToTop() {
-        Event<HomeEvent> homeEvent = null;
+        Event event = null;
         //根据当前Fragment页面发送不同的事件
         switch (mCurrentFgIndex) {
             case 0:
-                homeEvent = new Event<>(EventBusCode.Main2Home, new HomeEvent());
+                event = new Event<>(EventBusCode.Main2Home, new HomeEvent());
                 break;
             case 1:
-                homeEvent = new Event<>(EventBusCode.Main2Tree, new HomeEvent());
+                event = new Event<>(EventBusCode.Main2Tree, new TreeEvent(true));
+                break;
+            case 2:
+                event = new Event<>(EventBusCode.Main2Navigation, new TreeEvent(true));
                 break;
             default:
                 break;
         }
-        if (homeEvent != null) {
-            EventBusUtil.sendEvent(homeEvent);
+        if (event != null) {
+            EventBusUtil.sendEvent(event);
         }
     }
 

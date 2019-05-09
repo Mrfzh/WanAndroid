@@ -17,9 +17,15 @@ import com.feng.wanandroid.R;
 import com.feng.wanandroid.adapter.NaviChapterDataAdapter;
 import com.feng.wanandroid.base.BaseFragment;
 import com.feng.wanandroid.cache.ACache;
+import com.feng.wanandroid.config.EventBusCode;
 import com.feng.wanandroid.contract.INavigationContract;
 import com.feng.wanandroid.entity.data.NavigationData;
+import com.feng.wanandroid.entity.eventbus.Event;
+import com.feng.wanandroid.entity.eventbus.NavigationEvent;
 import com.feng.wanandroid.presenter.NavigationPresenter;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,6 +129,29 @@ public class NavigationFragment extends BaseFragment<NavigationPresenter> implem
         mProgressBar.setVisibility(View.GONE);
 
         showShortToast(errorMsg);
+    }
+
+    @Override
+    protected boolean isRegisterEventBus() {
+        return true;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventCome(Event<NavigationEvent> event) {
+        switch (event.getCode()) {
+            case EventBusCode.Main2Navigation:
+                backToTop();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 文章和导航都返回顶部
+     */
+    private void backToTop() {
+        mChapterDataRv.smoothScrollToPosition(0);
     }
 
     /**

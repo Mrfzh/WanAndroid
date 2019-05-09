@@ -222,7 +222,7 @@ public class TreeArticleCatalogFragment extends BaseFragment<TreeArticleCatalogP
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventCome(Event<TreeArticleCatalogEvent> event) {
         switch (event.getCode()) {
-            case EventBusCode.ShowArticle2TreeArticleCatelog:
+            case EventBusCode.ShowArticle2TreeArticleCatalog:
                 //更新文章列表
                 mArticleDataList.get(event.getData().getPosition()).setCollect(event.getData().isCollected());
                 mTreeArticleAdapter.notifyDataSetChanged();

@@ -19,5 +19,6 @@ public class EventBusCode {
     public static final int Tree2TreeDetailed = 11;
     public static final int TreeArticle2ShowArticle = 12;
     public static final int Main2Tree = 13;
-    public static final int ShowArticle2TreeArticleCatelog = 14;
+    public static final int ShowArticle2TreeArticleCatalog = 14;
+    public static final int Main2Navigation = 15;
 }

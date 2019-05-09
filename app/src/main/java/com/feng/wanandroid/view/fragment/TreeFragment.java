@@ -17,6 +17,7 @@ import com.feng.wanandroid.entity.data.TreeData;
 import com.feng.wanandroid.entity.eventbus.Event;
 import com.feng.wanandroid.entity.eventbus.HomeEvent;
 import com.feng.wanandroid.entity.eventbus.TreeDetailedEvent;
+import com.feng.wanandroid.entity.eventbus.TreeEvent;
 import com.feng.wanandroid.presenter.TreePresenter;
 import com.feng.wanandroid.utils.EventBusUtil;
 import com.feng.wanandroid.view.activity.TreeDetailedActivity;
@@ -146,7 +147,7 @@ public class TreeFragment extends BaseFragment<TreePresenter> implements ITreeCo
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventCome(Event<HomeEvent> event) {
+    public void onEventCome(Event<TreeEvent> event) {
         switch (event.getCode()) {
             case EventBusCode.Main2Tree:
                 if (event.getData().isBackToTop()) {

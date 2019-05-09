@@ -189,7 +189,7 @@ public class ShowArticleActivity extends BaseActivity<ShowArticlePresenter> impl
                 break;
             case ShowArticleEvent.FROM_TREE:    //从体系文章跳转而来
                 //更新体系文章
-                EventBusUtil.sendEvent(new Event<>(EventBusCode.ShowArticle2TreeArticleCatelog,
+                EventBusUtil.sendEvent(new Event<>(EventBusCode.ShowArticle2TreeArticleCatalog,
                         new TreeArticleCatalogEvent(position, true)));
                 break;
             default:
@@ -231,7 +231,7 @@ public class ShowArticleActivity extends BaseActivity<ShowArticlePresenter> impl
                 break;
             case ShowArticleEvent.FROM_TREE:
                 //更新体系文章
-                EventBusUtil.sendEvent(new Event<>(EventBusCode.ShowArticle2TreeArticleCatelog,
+                EventBusUtil.sendEvent(new Event<>(EventBusCode.ShowArticle2TreeArticleCatalog,
                         new TreeArticleCatalogEvent(position, false)));
                 break;
             default:
