@@ -1,16 +1,13 @@
 package com.feng.wanandroid.view.fragment;
 
 import android.graphics.Color;
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.feng.wanandroid.R;
@@ -31,8 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import q.rorbin.verticaltablayout.VerticalTabLayout;
 import q.rorbin.verticaltablayout.adapter.TabAdapter;
 import q.rorbin.verticaltablayout.widget.ITabView;
@@ -214,7 +209,17 @@ public class NavigationFragment extends BaseFragment<NavigationPresenter> implem
                 switch (newState) {
                     case RecyclerView.SCROLL_STATE_IDLE:    //静止时
                         //右边列表停止滑动后，设置左边导航栏的位置
-                        mChapterVerticalTabVtv.setTabSelected(mLinearLayoutManager.findFirstCompletelyVisibleItemPosition());
+                        //寻找第一个完全可见的item
+                        int position = mLinearLayoutManager.findFirstCompletelyVisibleItemPosition();
+                        if (position == -1) {   //没有找到完整的item时
+                            //寻找第一个可见的item
+                            position = mLinearLayoutManager.findFirstVisibleItemPosition();
+                            if (position != -1) {   //找到第一个可见的item
+                                mChapterVerticalTabVtv.setTabSelected(position);
+                            }
+                        } else {    //找到完整的item
+                            mChapterVerticalTabVtv.setTabSelected(position);
+                        }
                         break;
                     default:
                         break;
