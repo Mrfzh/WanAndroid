@@ -58,6 +58,9 @@ public class NavigationFragment extends BaseFragment<NavigationPresenter> implem
     private LinearLayoutManager mLinearLayoutManager;
     private ACache mCache;
 
+    private boolean mIsDragging = false;    //是否为手动滑动
+    private boolean mIsBackToTop = false;   //是否为返回顶部操作
+
     @Override
     protected void doInOnCreate() {
         mPresenter.getNavigationData();
@@ -146,6 +149,7 @@ public class NavigationFragment extends BaseFragment<NavigationPresenter> implem
      * 文章和导航都返回顶部
      */
     private void backToTop() {
+        mIsBackToTop = true;
         mChapterDataRv.smoothScrollToPosition(0);
     }
 
@@ -197,6 +201,18 @@ public class NavigationFragment extends BaseFragment<NavigationPresenter> implem
     }
 
     /**
+     * RV是否有滚动
+     *
+     * @param lastPosition 调用滚动方法前的第一个可见item位置
+     * @return 是否有滚动
+     */
+    private boolean hasScroll(int lastPosition) {
+        int currPosition = mLinearLayoutManager.findFirstVisibleItemPosition();
+
+        return !(lastPosition == currPosition);
+    }
+
+    /**
      * 初始化右边导航数据列表
      */
     private void initChapterDataList() {
@@ -208,6 +224,10 @@ public class NavigationFragment extends BaseFragment<NavigationPresenter> implem
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 switch (newState) {
                     case RecyclerView.SCROLL_STATE_IDLE:    //静止时
+                        if (!mIsBackToTop && !mIsDragging) { //如果不是返回顶部并且不是手动滑动，不过管
+                            break;
+                        }
+
                         //右边列表停止滑动后，设置左边导航栏的位置
                         //寻找第一个完全可见的item
                         int position = mLinearLayoutManager.findFirstCompletelyVisibleItemPosition();
@@ -220,6 +240,12 @@ public class NavigationFragment extends BaseFragment<NavigationPresenter> implem
                         } else {    //找到完整的item
                             mChapterVerticalTabVtv.setTabSelected(position);
                         }
+                        //重置标记位
+                        mIsDragging = false;
+                        mIsBackToTop = false;
+                        break;
+                    case RecyclerView.SCROLL_STATE_DRAGGING:    //正在被外部拖拽,一般为用户正在用手指滚动
+                        mIsDragging = true;
                         break;
                     default:
                         break;
