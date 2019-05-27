@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.feng.wanandroid.R;
 import com.feng.wanandroid.entity.data.NavigationData;
+import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.util.List;
@@ -27,6 +28,16 @@ public class NaviChapterDataAdapter extends RecyclerView.Adapter<NaviChapterData
     private List<String> mChapterNames;
     private List<NavigationData.ChapterData> mChapterData;
 
+    private OnClickListener mOnClickListener;
+
+    public interface OnClickListener {
+        void clickTag(int chapterPos, int tagPos);
+    }
+
+    public void setOnClickListener(OnClickListener onClickListener) {
+        mOnClickListener = onClickListener;
+    }
+
     public NaviChapterDataAdapter(Context mContext, List<String> mChapterNames, List<NavigationData.ChapterData> mChapterData) {
         this.mContext = mContext;
         this.mChapterNames = mChapterNames;
@@ -43,7 +54,15 @@ public class NaviChapterDataAdapter extends RecyclerView.Adapter<NaviChapterData
     @Override
     public void onBindViewHolder(@NonNull NaviChapterDataViewHolder naviChapterDataViewHolder, int i) {
         naviChapterDataViewHolder.chapterName.setText(mChapterNames.get(i));
-        naviChapterDataViewHolder.chapterContent.setAdapter(new NaviTagAdapter(mContext, mChapterData.get(i).getTitles()));
+        NaviTagAdapter naviTagAdapter = new NaviTagAdapter(mContext, mChapterData.get(i).getTitles());
+        naviChapterDataViewHolder.chapterContent.setAdapter(naviTagAdapter);
+        naviChapterDataViewHolder.chapterContent.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
+            @Override
+            public boolean onTagClick(View view, int position, FlowLayout parent) {
+                mOnClickListener.clickTag(i, position);
+                return true;
+            }
+        });
     }
 
     @Override

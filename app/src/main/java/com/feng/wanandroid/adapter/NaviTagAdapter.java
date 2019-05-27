@@ -1,6 +1,7 @@
 package com.feng.wanandroid.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ public class NaviTagAdapter extends TagAdapter<String> {
         TextView textView = (TextView) LayoutInflater.from(mContext).inflate(
                 R.layout.item_navi_tag, parent, false);
         textView.setText(s);
+
         return textView;
     }
 }

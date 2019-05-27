@@ -270,6 +270,7 @@ public class ShowArticleActivity extends BaseActivity<ShowArticlePresenter> impl
                 mIsHideCollect = event.getData().isHideCollect();
                 break;
             case EventBusCode.HomeBanner2ShowArticle:
+            case EventBusCode.Navigation2ShowArticle:
                 mLink = event.getData().getLink();
                 mTitle = event.getData().getTitle();
                 mIsHideCollect = true;

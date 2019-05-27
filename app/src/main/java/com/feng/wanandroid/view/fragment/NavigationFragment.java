@@ -19,7 +19,10 @@ import com.feng.wanandroid.contract.INavigationContract;
 import com.feng.wanandroid.entity.data.NavigationData;
 import com.feng.wanandroid.entity.eventbus.Event;
 import com.feng.wanandroid.entity.eventbus.NavigationEvent;
+import com.feng.wanandroid.entity.eventbus.ShowArticleEvent;
 import com.feng.wanandroid.presenter.NavigationPresenter;
+import com.feng.wanandroid.utils.EventBusUtil;
+import com.feng.wanandroid.view.activity.ShowArticleActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -201,24 +204,26 @@ public class NavigationFragment extends BaseFragment<NavigationPresenter> implem
     }
 
     /**
-     * RV是否有滚动
-     *
-     * @param lastPosition 调用滚动方法前的第一个可见item位置
-     * @return 是否有滚动
-     */
-    private boolean hasScroll(int lastPosition) {
-        int currPosition = mLinearLayoutManager.findFirstVisibleItemPosition();
-
-        return !(lastPosition == currPosition);
-    }
-
-    /**
      * 初始化右边导航数据列表
      */
     private void initChapterDataList() {
         mChapterDataRv.setLayoutManager(mLinearLayoutManager);
         NaviChapterDataAdapter adapter = new NaviChapterDataAdapter(getContext(), mChapterNames, mChapterData);
+        adapter.setOnClickListener(new NaviChapterDataAdapter.OnClickListener() {
+            @Override
+            public void clickTag(int chapterPos, int tagPos) {  //点击各栏目的tag
+                //该tag对应的标题和链接
+                String link = mChapterData.get(chapterPos).getLinks().get(tagPos);
+                String title = mChapterData.get(chapterPos).getTitles().get(tagPos);
+                //活动跳转
+                Event<ShowArticleEvent> event = new Event<>(EventBusCode.Navigation2ShowArticle, new ShowArticleEvent(
+                        link, title, false, -1, -1, -1, true));
+                EventBusUtil.sendStickyEvent(event);
+                jump2Activity(ShowArticleActivity.class);
+            }
+        });
         mChapterDataRv.setAdapter(adapter);
+        //RV滑动监听
         mChapterDataRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
