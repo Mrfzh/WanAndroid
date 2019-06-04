@@ -7,6 +7,7 @@
     android:clickable="true">
 
     <TextView
+        android:id="@+id/tv_project_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="该功能将在后续发布"
