@@ -26,6 +26,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:indeterminateTint="@color/color_tab_one"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 </RelativeLayout>

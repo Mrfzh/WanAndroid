@@ -55,6 +55,7 @@ public class TreeFragment extends BaseFragment<TreePresenter> implements ITreeCo
     @Override
     protected void doInOnCreate() {
         mPresenter.getTree();
+        mProgressBar.setVisibility(View.VISIBLE);
 
         mCache = ACache.get(getContext());
     }

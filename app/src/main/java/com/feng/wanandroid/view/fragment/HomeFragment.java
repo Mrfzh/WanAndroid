@@ -66,6 +66,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements IHomeCo
     @Override
     protected void doInOnCreate() {
         mPresenter.getBannerInfo();
+        mProgressBar.setVisibility(View.VISIBLE);
 
         mCache = ACache.get(getContext());
     }

@@ -2,15 +2,34 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginTop="?attr/actionBarSize"
     android:background="@color/color_white_max"
     android:clickable="true">
 
-    <TextView
-        android:id="@+id/tv_project_content"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tv_project_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabMode="scrollable"
+        app:tabTextAppearance="@style/CustomTabLayoutTextStyle"
+        app:tabIndicatorColor="@android:color/holo_blue_light"
+        app:tabSelectedTextColor="@android:color/holo_blue_light"
+        app:tabRippleColor="@android:color/transparent"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_project_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tv_project_title"/>
+
+    <ProgressBar
+        android:id="@+id/pb_project"
+        style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="该功能将在后续发布"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:indeterminateTint="@color/color_tab_one"
+        android:visibility="gone" />
 
 </RelativeLayout>

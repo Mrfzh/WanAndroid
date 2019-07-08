@@ -14,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabMode="scrollable"
-        app:tabTextAppearance="@style/CustomTabLayoutTextStyle"/>
+        app:tabTextAppearance="@style/CustomTabLayoutTextStyle"
+        app:tabRippleColor="@android:color/transparent"/>
 
     <com.feng.wanandroid.widget.custom.MySwipeRefreshLayout
         android:id="@+id/srv_tree_detailed_refresh"

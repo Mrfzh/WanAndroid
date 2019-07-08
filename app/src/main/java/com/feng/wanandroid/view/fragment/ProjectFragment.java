@@ -1,17 +1,20 @@
 package com.feng.wanandroid.view.fragment;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.feng.wanandroid.R;
+import com.feng.wanandroid.adapter.ProjectArticleCatalogFragmentStatePagerAdapter;
 import com.feng.wanandroid.base.BaseFragment;
 import com.feng.wanandroid.contract.IProjectContract;
 import com.feng.wanandroid.entity.data.ProjectTreeData;
 import com.feng.wanandroid.presenter.ProjectPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -25,11 +28,15 @@ import butterknife.Unbinder;
 public class ProjectFragment extends BaseFragment<ProjectPresenter>
         implements IProjectContract.View {
 
-    @BindView(R.id.tv_project_content)
-    TextView mContentTv;
+    @BindView(R.id.tv_project_title)
+    TabLayout mTitleTv;
+    @BindView(R.id.vp_project_content)
+    ViewPager mArticleCatalogVp;
 
-    private List<Integer> mIdList;      //项目id列表
-    private List<String> mNameList;     //项目名列表
+    private List<Integer> mIdList = new ArrayList<>();      //项目id列表
+    private List<String> mNameList = new ArrayList<>();     //项目名列表
+    private List<ProjectArticleCatalogFragment> mFragmentList
+            = new ArrayList<>();  //碎片列表
 
     @Override
     protected void doInOnCreate() {
@@ -62,6 +69,14 @@ public class ProjectFragment extends BaseFragment<ProjectPresenter>
             mIdList = projectTreeData.getIdList();
             mNameList = projectTreeData.getNameList();
 
+            for (int i = 0; i < mNameList.size(); i++) {
+                mFragmentList.add(ProjectArticleCatalogFragment.newInstance(mIdList.get(i)));
+            }
+            mArticleCatalogVp.setAdapter(new
+                    ProjectArticleCatalogFragmentStatePagerAdapter(getActivity()
+                    .getSupportFragmentManager(),  mNameList, mFragmentList));
+            mTitleTv.setupWithViewPager(mArticleCatalogVp);
+
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < mNameList.size(); i++) {
                 builder.append(mNameList.get(i));
@@ -70,7 +85,6 @@ public class ProjectFragment extends BaseFragment<ProjectPresenter>
                 builder.append("----");
             }
 
-//            mContentTv.setText(builder.toString());
         } else {
             showShortToast("获取数据失败");
         }

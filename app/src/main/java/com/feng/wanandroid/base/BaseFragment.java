@@ -38,6 +38,12 @@ public abstract class BaseFragment<V extends BasePresenter> extends Fragment {
             EventBusUtil.register(this);
         }
 
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initView();
         doInOnCreate();
     }
 
@@ -46,7 +52,7 @@ public abstract class BaseFragment<V extends BasePresenter> extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(getLayoutId(), container, false);  //第三个参数一定要设为false
         unBinder = ButterKnife.bind(this, view);
-        initView();
+
         return view;
     }
 

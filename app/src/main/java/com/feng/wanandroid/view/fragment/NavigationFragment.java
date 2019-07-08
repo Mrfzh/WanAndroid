@@ -67,6 +67,8 @@ public class NavigationFragment extends BaseFragment<NavigationPresenter> implem
     @Override
     protected void doInOnCreate() {
         mPresenter.getNavigationData();
+        mProgressBar.setVisibility(View.VISIBLE);
+
         mLinearLayoutManager = new LinearLayoutManager(getContext());
         mCache = ACache.get(getContext());
     }
